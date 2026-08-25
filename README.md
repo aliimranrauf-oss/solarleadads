@@ -56,7 +56,40 @@ solarleadads/
    no `+`, no spaces). Everything else (email, nav, CTA labels) is already wired from here.
 2. Double check `metadataBase` and OG URLs in `app/layout.tsx` still say `solarleadads.com`.
 
-## Run locally
+## Hero carousel images
+
+The hero now rotates through 3–6 images automatically (every ~3.2s), each
+with its own short caption, similar to a "get more X leads" rotation.
+
+**Where files go:** `public/hero/`, named `hero-1.jpg`, `hero-2.jpg`, etc.
+**Where to edit captions/order/count:** `lib/hero-images.ts` — this is a plain
+array, add or remove entries to change how many slides show (3–6 is the
+sweet spot; more feels slow, fewer feels static).
+
+**Image specs (for your AI generator):**
+- **Aspect ratio: 4:3** (landscape) — this is what the carousel container is built for
+- **Recommended resolution: 1600 × 1200 px** (scales down cleanly on mobile, sharp on retina screens)
+- **Format:** JPG or WEBP — WEBP is smaller for the same quality
+- **File size target: under 300–400 KB each** after export (use squoosh.app or tinypng.com to compress if your generator exports larger)
+- **Style consistency matters most:** since these rotate in the same spot, keep
+  lighting, color grading, and composition style consistent across all slides
+  (e.g. don't mix a bright daytime photo with a moody dark one) — inconsistency
+  reads as "stock photo grab bag" rather than a designed carousel
+- Each image should have a clear focal point roughly centered — the caption
+  bar overlays the bottom ~25% of the image, so avoid important detail there
+
+**Example caption set already wired up** (edit freely in `lib/hero-images.ts`):
+1. Get more solar installation leads
+2. Get more solar checkup & maintenance leads
+3. Get hired for solar panel cleaning jobs
+4. Get more panel & battery upgrade leads
+5. Get more solar sales leads
+
+If an image file is missing, that slide will just show a broken image icon —
+so add all files referenced in `lib/hero-images.ts` before deploying, or trim
+the array down to only the slides you have images for.
+
+
 
 ```bash
 npm install
