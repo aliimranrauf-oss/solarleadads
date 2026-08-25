@@ -1,0 +1,52 @@
+import Link from "next/link";
+import PanelGridGraphic from "@/components/PanelGridGraphic";
+import { siteConfig, whatsappLink } from "@/lib/site-config";
+
+export default function Hero() {
+  return (
+    <section className="section-pad pt-10 sm:pt-14">
+      <div className="container-max grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <p className="eyebrow mb-5">Meta ads for the solar industry</p>
+          <h1 className="text-4xl font-semibold leading-[1.1] sm:text-5xl">
+            More Qualified Solar Leads.{" "}
+            <span className="text-leaf-600">Lower Cost.</span>{" "}
+            Higher Closings.
+          </h1>
+          <p className="mt-6 max-w-lg text-base text-ink-400 sm:text-lg">
+            We run Meta ad campaigns that bring US solar businesses exclusive,
+            high-intent leads — for installers, sellers, technicians, panel
+            and battery providers, and solar maintenance teams.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href={siteConfig.primaryCta.href} className="btn-primary">
+              {siteConfig.primaryCta.label}
+            </Link>
+            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+              Message us on WhatsApp
+            </a>
+          </div>
+
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-400">
+            {["No long-term contracts", "Exclusive leads only", "USA-focused campaigns"].map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0 text-leaf-600">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex justify-center lg:justify-end">
+          {/* Signature illustration — replace with a real photo of installed panels
+              on a US home later by swapping this component for a Next/Image block
+              of the same max-w-md size, no other layout changes needed. */}
+          <PanelGridGraphic />
+        </div>
+      </div>
+    </section>
+  );
+}
