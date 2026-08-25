@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface text-ink font-body antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-navy;
+  }
+
+  ::selection {
+    @apply bg-leaf-100 text-navy;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid theme("colors.trust.500");
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-mono text-xs tracking-[0.18em] uppercase text-leaf-600 font-medium;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-trust-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-trust-600;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-navy/15 bg-white px-6 py-3 text-sm font-semibold text-navy transition-colors hover:border-trust-500 hover:text-trust-500;
+  }
+
+  .section-pad {
+    @apply px-6 py-16 sm:px-10 sm:py-20 lg:py-24;
+  }
+
+  .container-max {
+    @apply mx-auto w-full max-w-6xl;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
