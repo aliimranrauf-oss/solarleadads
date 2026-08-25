@@ -20,10 +20,10 @@ export default function HeroImageCarousel() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
       <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-trust-100 via-leaf-50 to-amber-100 blur-2xl opacity-70" />
 
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl shadow-soft">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-soft">
         {heroSlides.map((slide, i) => (
           <div
             key={slide.src}
@@ -37,7 +37,7 @@ export default function HeroImageCarousel() {
               alt={slide.alt}
               fill
               priority={i === 0}
-              sizes="(min-width: 1024px) 420px, 90vw"
+              sizes="(min-width: 1024px) 480px, (min-width: 640px) 420px, 90vw"
               className="object-cover"
             />
           </div>
