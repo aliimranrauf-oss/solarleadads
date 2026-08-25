@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PanelGridGraphic from "@/components/PanelGridGraphic";
+import HeroImageCarousel from "@/components/HeroImageCarousel";
 import { siteConfig, whatsappLink } from "@/lib/site-config";
 
 export default function Hero() {
@@ -41,10 +41,10 @@ export default function Hero() {
         </div>
 
         <div className="flex justify-center lg:justify-end">
-          {/* Signature illustration — replace with a real photo of installed panels
-              on a US home later by swapping this component for a Next/Image block
-              of the same max-w-md size, no other layout changes needed. */}
-          <PanelGridGraphic />
+          {/* Rotating hero image carousel. Add/edit images and captions in
+              lib/hero-images.ts. Drop the actual image files in /public/hero/.
+              See README.md for size, aspect ratio, and format guidance. */}
+          <HeroImageCarousel />
         </div>
       </div>
     </section>
