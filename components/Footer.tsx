@@ -16,6 +16,7 @@ const linkCols = [
     title: "Company",
     links: [
       { label: "FAQ", href: "/faq" },
+      { label: "Reviews", href: "/reviews" },
       { label: "Contact", href: "/contact" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
