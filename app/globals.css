@@ -60,6 +60,21 @@
   .card-lift {
     @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-soft;
   }
+
+  /* Scroll-triggered reveal for section headings/text (see components/Reveal.tsx).
+     Only opacity + transform — both compositor-only, so this is effectively
+     free performance-wise and never causes layout shift (elements keep their
+     box size at opacity:0). */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
