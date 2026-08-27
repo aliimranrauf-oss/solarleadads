@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 
 const services = [
   {
@@ -19,7 +20,7 @@ export default function ServicesSnapshot() {
   return (
     <section className="section-pad">
       <div className="container-max">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Our services</p>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold sm:text-4xl">Meta ads services built for solar businesses.</h2>
@@ -27,7 +28,7 @@ export default function ServicesSnapshot() {
           <Link href="/services" className="btn-secondary">
             See all services
           </Link>
-        </div>
+        </Reveal>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {services.map((s, i) => (
