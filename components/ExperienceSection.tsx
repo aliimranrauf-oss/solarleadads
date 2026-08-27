@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const scope = [
   "Solar panel installers",
   "Solar sellers & consultants",
@@ -12,7 +14,7 @@ export default function ExperienceSection() {
   return (
     <section className="section-pad">
       <div className="container-max grid gap-12 lg:grid-cols-5 lg:gap-16">
-        <div className="lg:col-span-2">
+        <Reveal className="lg:col-span-2">
           <p className="eyebrow">Proven experience</p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
             2+ years running lead campaigns across the solar industry.
@@ -23,9 +25,9 @@ export default function ExperienceSection() {
             bring in the meantime is direct, hands-on experience across nearly
             every corner of the solar business — not just one niche.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="lg:col-span-3">
+        <Reveal className="lg:col-span-3" delay={120}>
           <div className="rounded-2xl border border-navy/5 bg-white p-6 shadow-card sm:p-8">
             <p className="font-display text-sm font-semibold text-navy">Where we&apos;ve run solar lead campaigns</p>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -39,7 +41,7 @@ export default function ExperienceSection() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
