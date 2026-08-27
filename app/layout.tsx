@@ -55,6 +55,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
+        {/* Fallback for the rare no-JS visitor: the scroll-reveal in
+            components/Reveal.tsx needs JS to flip elements visible, so
+            force them visible here if JS never runs. */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <Header />
         <main>{children}</main>
         <Footer />
