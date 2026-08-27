@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Reveal from "@/components/Reveal";
 
 const faqs = [
   {
@@ -27,7 +28,7 @@ export default function FAQSection() {
   return (
     <section className="section-pad">
       <div className="container-max grid gap-10 lg:grid-cols-5 lg:gap-16">
-        <div className="lg:col-span-2">
+        <Reveal className="lg:col-span-2">
           <p className="eyebrow">FAQ</p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">Common questions from solar businesses.</h2>
           <p className="mt-4 text-sm text-ink-400">
@@ -37,25 +38,27 @@ export default function FAQSection() {
             </Link>{" "}
             or reach out directly.
           </p>
-        </div>
+        </Reveal>
 
         <div className="space-y-3 lg:col-span-3">
-          {faqs.map((item) => (
-            <details key={item.q} className="group rounded-xl border border-navy/10 bg-white p-5 open:shadow-card">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-sm font-semibold text-navy sm:text-base">
-                {item.q}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="shrink-0 text-trust-500 transition-transform group-open:rotate-45"
-                >
-                  <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-                </svg>
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-ink-400">{item.a}</p>
-            </details>
+          {faqs.map((item, i) => (
+            <Reveal key={item.q} delay={i * 70}>
+              <details className="group rounded-xl border border-navy/10 bg-white p-5 open:shadow-card">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-sm font-semibold text-navy sm:text-base">
+                  {item.q}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="shrink-0 text-trust-500 transition-transform group-open:rotate-45"
+                  >
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  </svg>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-ink-400">{item.a}</p>
+              </details>
+            </Reveal>
           ))}
         </div>
       </div>
