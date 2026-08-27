@@ -64,8 +64,10 @@ export async function submitReview(
   try {
     const supabase = getSupabaseServerClient();
 
-    // status is deliberately hardcoded to "pending" here — never taken from
-    // the form — so a visitor can never publish their own review directly.
+    // status is deliberately hardcoded here — never taken from the form —
+    // so a visitor can never inject an arbitrary status value. Reviews are
+    // auto-approved and go live immediately; pinning (separate "pinned"
+    // column) is still a manual, admin-only action done in Supabase.
     const { error } = await supabase.from("reviews").insert({
       name,
       company: company || null,
@@ -73,7 +75,7 @@ export async function submitReview(
       rating,
       review,
       avatar_url: avatarUrl || null,
-      status: "pending",
+      status: "approved",
     });
 
     if (error) {
@@ -86,7 +88,7 @@ export async function submitReview(
 
     return {
       status: "success",
-      message: "Thanks! Your review has been submitted and will appear once it's reviewed.",
+      message: "Your review has been published. Thanks for sharing your experience!",
     };
   } catch (err) {
     console.error("submitReview error:", err);
