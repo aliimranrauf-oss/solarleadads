@@ -30,8 +30,12 @@ export default function ServicesSnapshot() {
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          {services.map((s) => (
-            <div key={s.title} className="rounded-2xl border border-navy/5 bg-white p-6 shadow-card">
+          {services.map((s, i) => (
+            <div
+              key={s.title}
+              className="card-lift animate-fadeInUp rounded-2xl border border-navy/5 bg-white p-6 shadow-card"
+              style={{ animationDelay: `${i * 90}ms` }}
+            >
               <p className="font-display text-lg font-semibold text-navy">{s.title}</p>
               <ul className="mt-4 space-y-2.5">
                 {s.points.map((point) => (
