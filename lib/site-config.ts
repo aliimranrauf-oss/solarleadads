@@ -2,8 +2,8 @@ export const siteConfig = {
   name: "SolarLeadAds",
   domain: "solarleadads.com",
   email: "hello@solarleadads.com",
-  // TODO: replace with the real business WhatsApp number, in international format, no spaces or symbols.
-  whatsappNumber: "10000000000",
+  // WhatsApp number in international format, no +, no spaces, no leading zeros.
+  whatsappNumber: "447462230676",
   whatsappDefaultMessage:
     "Hi SolarLeadAds, I'd like to talk about lead generation for my solar business.",
   nav: [
