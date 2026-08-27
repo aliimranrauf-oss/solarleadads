@@ -2,6 +2,7 @@ const items = [
   {
     title: "Solar-Only Focus",
     desc: "We work exclusively with solar businesses — installers, sellers, and technicians.",
+    gradient: "from-trust-400 to-trust-600",
     icon: (
       <path d="M12 2L3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
     ),
@@ -9,6 +10,7 @@ const items = [
   {
     title: "USA, UK & Australia",
     desc: "We run and localize campaigns for solar markets and buying behavior in all three countries.",
+    gradient: "from-leaf-500 to-leaf-600",
     icon: (
       <>
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
@@ -19,6 +21,7 @@ const items = [
   {
     title: "Real Solar Experience",
     desc: "2+ years running lead campaigns across the solar industry, globally.",
+    gradient: "from-amber-500 to-orange-500",
     icon: (
       <path d="M4 19V9m6 10V5m6 14v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     ),
@@ -30,9 +33,13 @@ export default function TrustBar() {
     <section className="px-6 sm:px-10">
       <div className="container-max rounded-2xl border border-navy/5 bg-white p-6 shadow-card sm:p-8">
         <div className="grid gap-6 sm:grid-cols-3">
-          {items.map((item) => (
-            <div key={item.title} className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-trust-50 text-trust-500">
+          {items.map((item, i) => (
+            <div
+              key={item.title}
+              className="animate-fadeInUp flex items-start gap-3"
+              style={{ animationDelay: `${i * 90}ms` }}
+            >
+              <span className={`icon-badge shrink-0 bg-gradient-to-br ${item.gradient}`}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   {item.icon}
                 </svg>
