@@ -24,8 +24,20 @@ export async function submitLead(
 ): Promise<SubmitLeadState> {
   // Honeypot: real users never see or fill this field. If it has a value,
   // silently pretend it worked so bots don't learn to look elsewhere.
-  const honeypot = String(formData.get("company_site") ?? "").trim();
+  const honeypot = String(formData.get("hp_field_9k2") ?? "").trim();
   if (honeypot) {
+    console.warn("submitLead: honeypot triggered, skipping insert", {
+      honeypotValue: honeypot,
+    });
+    return { status: "success" };
+  }
+
+  // Timestamp trap: if the form was "submitted" less than 1.5s after it
+  // rendered, it's almost certainly a bot (or a resubmitted/replayed
+  // request), not a real person typing.
+  const renderedAt = Number(formData.get("form_rendered_at") ?? 0);
+  if (renderedAt && Date.now() - renderedAt < 1500) {
+    console.warn("submitLead: submitted too fast, likely bot, skipping insert");
     return { status: "success" };
   }
 
