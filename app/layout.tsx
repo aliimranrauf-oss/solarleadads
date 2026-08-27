@@ -30,11 +30,11 @@ export const metadata: Metadata = {
     template: "%s | SolarLeadAds",
   },
   description:
-    "SolarLeadAds runs Meta ad campaigns that bring qualified leads to solar installers, sellers, technicians, and panel & battery providers across the USA.",
+    "SolarLeadAds runs Meta ad campaigns that bring qualified leads to solar installers, sellers, technicians, and panel & battery providers in the USA, UK, and Australia.",
   openGraph: {
     title: "SolarLeadAds — Meta Ads Lead Generation for Solar Businesses",
     description:
-      "We run high-performing Meta ad campaigns for solar installers, sellers, and technicians across the USA — exclusive leads, no long-term contracts.",
+      "We run high-performing Meta ad campaigns for solar installers, sellers, and technicians in the USA, UK, and Australia — exclusive leads, no long-term contracts.",
     url: "https://solarleadads.com",
     siteName: "SolarLeadAds",
     type: "website",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SolarLeadAds — Meta Ads Lead Generation for Solar Businesses",
     description:
-      "Qualified Meta ad leads for solar installers, sellers, and technicians across the USA.",
+      "Qualified Meta ad leads for solar installers, sellers, and technicians in the USA, UK, and Australia.",
   },
 };
 
