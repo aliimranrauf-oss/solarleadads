@@ -32,8 +32,8 @@ export default function Footer() {
             Solar<span className="text-amber-500">LeadAds</span>
           </p>
           <p className="mt-3 max-w-xs text-sm">
-            Meta ads lead generation for solar businesses across the USA —
-            installers, sellers, technicians, and more.
+            Meta ads lead generation for solar businesses — installers,
+            sellers, technicians, and more.
           </p>
         </div>
 
@@ -60,7 +60,19 @@ export default function Footer() {
                 {siteConfig.email}
               </a>
             </li>
-            <li>USA (all 50 states)</li>
+          </ul>
+
+          <p className="mt-6 text-sm font-semibold text-white">We serve</p>
+          <ul className="mt-4 space-y-2.5 text-sm">
+            <li>
+              <Link href="/usa" className="hover:text-white">USA</Link>
+            </li>
+            <li>
+              <Link href="/uk" className="hover:text-white">United Kingdom</Link>
+            </li>
+            <li>
+              <Link href="/australia" className="hover:text-white">Australia</Link>
+            </li>
           </ul>
         </div>
       </div>
