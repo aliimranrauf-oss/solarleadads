@@ -28,7 +28,7 @@ export default function ContactPage() {
             {[
               "No long-term contracts",
               "Exclusive leads only",
-              "USA-focused campaigns",
+              "Serving USA, UK & Australia",
               "We'll email your audit — nothing else required from you",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2">
