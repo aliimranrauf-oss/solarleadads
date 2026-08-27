@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   description: "See what solar businesses say about working with SolarLeadAds, and leave your own review.",
 };
 
+// Refetch approved reviews from Supabase at most every 60s instead of
+// baking them in at build time — otherwise newly-approved reviews won't
+// show up until the next deploy.
+export const revalidate = 60;
+
 export default async function ReviewsPage() {
   const reviews = await getApprovedReviews();
 
