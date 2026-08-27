@@ -65,10 +65,15 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-6px)" },
         },
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(14px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         panelPulse: "panelPulse 3.2s ease-in-out infinite",
         floatSlow: "floatSlow 6s ease-in-out infinite",
+        fadeInUp: "fadeInUp 0.6s ease-out both",
       },
     },
   },
