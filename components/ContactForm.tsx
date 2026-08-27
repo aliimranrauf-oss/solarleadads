@@ -34,11 +34,30 @@ export default function ContactForm({ source = "contact_page" }: { source?: stri
     <form ref={formRef} action={formAction} className="space-y-5">
       <input type="hidden" name="source" value={source} />
 
-      {/* Honeypot — hidden from real users, visible to bots. Do not remove. */}
-      <div className="absolute -left-[9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
-        <label htmlFor="company_site">Leave this field empty</label>
-        <input type="text" id="company_site" name="company_site" tabIndex={-1} autoComplete="off" />
+      {/* Honeypot — hidden from real users, visible to bots. Do not remove.
+          Field name is deliberately generic/nonsensical so browser autofill
+          (address book / company profile data) doesn't get stuffed into it —
+          "company_site" was too close to real autofill fields and was being
+          silently filled in by Chrome, causing real submissions to be
+          treated as spam and skipped. */}
+      <div
+        className="pointer-events-none absolute left-0 top-0 -z-10 h-0 w-0 overflow-hidden opacity-0"
+        aria-hidden="true"
+      >
+        <label htmlFor="hp_field_9k2">Leave this field empty</label>
+        <input
+          type="text"
+          id="hp_field_9k2"
+          name="hp_field_9k2"
+          tabIndex={-1}
+          autoComplete="off"
+          data-lpignore="true"
+          data-1p-ignore="true"
+        />
       </div>
+      {/* Timestamp trap: real users take at least a couple seconds to fill
+          the form; bots that submit instantly get treated as spam too. */}
+      <input type="hidden" name="form_rendered_at" value={Date.now()} />
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Name" htmlFor="name" required>
