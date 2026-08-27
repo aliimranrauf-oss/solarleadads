@@ -46,6 +46,10 @@
   .container-max {
     @apply mx-auto w-full max-w-6xl;
   }
+
+  .input-field {
+    @apply w-full rounded-xl border border-navy/15 bg-white px-4 py-2.5 text-sm text-ink placeholder:text-ink-300 transition-colors focus:border-trust-500 focus:outline-none focus:ring-2 focus:ring-trust-100;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
