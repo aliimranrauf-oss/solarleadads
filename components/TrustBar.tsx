@@ -7,8 +7,8 @@ const items = [
     ),
   },
   {
-    title: "USA-Focused Campaigns",
-    desc: "Every campaign is built around US solar markets and buying behavior.",
+    title: "USA, UK & Australia",
+    desc: "We run and localize campaigns for solar markets and buying behavior in all three countries.",
     icon: (
       <>
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
