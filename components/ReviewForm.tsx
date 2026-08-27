@@ -67,6 +67,33 @@ export default function ReviewForm() {
             ))}
           </select>
         </Field>
+
+        <Field label="Order number" htmlFor="order_number" required hint="From your purchase with us">
+          <input
+            id="order_number"
+            name="order_number"
+            type="text"
+            required
+            className="input-field"
+            placeholder="e.g. SLA-10293"
+          />
+        </Field>
+
+        <Field
+          label="Phone or email"
+          htmlFor="contact"
+          required
+          hint="Private — never shown on the site"
+        >
+          <input
+            id="contact"
+            name="contact"
+            type="text"
+            required
+            className="input-field"
+            placeholder="For verification only"
+          />
+        </Field>
       </div>
 
       <Field label="Photo link" htmlFor="avatar_url" hint="Optional — paste a link to a photo of you, or leave blank for initials">
@@ -96,8 +123,9 @@ export default function ReviewForm() {
       </button>
 
       <p className="text-xs text-ink-300">
-        Reviews are checked before they go live, so yours may take a little
-        while to appear.
+        Your review is published immediately and will appear on this page
+        right away. Your order number and contact info are kept private and
+        used only to verify genuine customers.
       </p>
     </form>
   );
