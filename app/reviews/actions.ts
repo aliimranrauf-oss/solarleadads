@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export type SubmitReviewState = {
@@ -14,6 +15,16 @@ function isValidUrl(value: string) {
   } catch {
     return false;
   }
+}
+
+// Accepts either a plausible email or a plausible phone number. Deliberately
+// loose (international formats vary a lot) — this is a light sanity check,
+// not a hard validator, since the real goal is just discouraging one-off
+// randoms from leaving fake reviews, not blocking real customers.
+function isValidContact(value: string) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phonePattern = /^[+]?[\d\s()-]{7,20}$/;
+  return emailPattern.test(value) || phonePattern.test(value);
 }
 
 export async function submitReview(
@@ -40,11 +51,34 @@ export async function submitReview(
   const ratingRaw = String(formData.get("rating") ?? "").trim();
   const review = String(formData.get("review") ?? "").trim();
   const avatarUrl = String(formData.get("avatar_url") ?? "").trim();
+  const orderNumber = String(formData.get("order_number") ?? "").trim();
+  const contact = String(formData.get("contact") ?? "").trim();
 
   if (!name || !country || !review) {
     return {
       status: "error",
       message: "Please fill in your name, country, and review.",
+    };
+  }
+
+  if (!orderNumber) {
+    return {
+      status: "error",
+      message: "Please enter the order number you got from us when you purchased services.",
+    };
+  }
+
+  if (!contact) {
+    return {
+      status: "error",
+      message: "Please enter a phone number or email so we can verify your order.",
+    };
+  }
+
+  if (!isValidContact(contact)) {
+    return {
+      status: "error",
+      message: "Please enter a valid phone number or email address.",
     };
   }
 
@@ -68,6 +102,11 @@ export async function submitReview(
     // so a visitor can never inject an arbitrary status value. Reviews are
     // auto-approved and go live immediately; pinning (separate "pinned"
     // column) is still a manual, admin-only action done in Supabase.
+    //
+    // order_number and contact are collected purely to discourage random
+    // fake reviews and to let you verify a genuine customer if needed.
+    // Neither is ever selected by the public query in lib/get-reviews.ts,
+    // so neither ever appears on the site.
     const { error } = await supabase.from("reviews").insert({
       name,
       company: company || null,
@@ -76,6 +115,8 @@ export async function submitReview(
       review,
       avatar_url: avatarUrl || null,
       status: "approved",
+      order_number: orderNumber,
+      contact,
     });
 
     if (error) {
@@ -85,6 +126,11 @@ export async function submitReview(
         message: "Something went wrong saving your review. Please try again in a moment.",
       };
     }
+
+    // Instantly refresh the homepage and /reviews page caches so the new
+    // review shows up right away instead of waiting for the 60s revalidate.
+    revalidatePath("/");
+    revalidatePath("/reviews");
 
     return {
       status: "success",
