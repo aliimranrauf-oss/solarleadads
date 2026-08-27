@@ -1,3 +1,5 @@
+import Reveal from "@/components/Reveal";
+
 const solutions = [
   {
     title: "Exclusive Leads",
@@ -49,10 +51,12 @@ export default function SolutionSection() {
   return (
     <section className="section-pad bg-surface-alt">
       <div className="container-max">
-        <p className="eyebrow">The solution</p>
-        <h2 className="mt-3 max-w-xl text-3xl font-semibold sm:text-4xl">
-          Leads built around your solar business, not a generic template.
-        </h2>
+        <Reveal>
+          <p className="eyebrow">The solution</p>
+          <h2 className="mt-3 max-w-xl text-3xl font-semibold sm:text-4xl">
+            Leads built around your solar business, not a generic template.
+          </h2>
+        </Reveal>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {solutions.map((s, i) => (
