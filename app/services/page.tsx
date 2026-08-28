@@ -77,7 +77,7 @@ export default function ServicesPage() {
             <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="font-semibold text-trust-500 hover:underline">
               message us on WhatsApp
             </a>{" "}
-            and we'll recommend one.
+            and we&apos;ll recommend one.
           </p>
         </div>
       </section>
