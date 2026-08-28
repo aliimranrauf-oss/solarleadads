@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import FinalCTA from "@/components/FinalCTA";
 import Reveal from "@/components/Reveal";
 import { whatsappLink } from "@/lib/site-config";
@@ -32,6 +33,46 @@ export default function ServicesPage() {
       </section>
 
       <PricingSection />
+
+      {/* Real client reviews — same component/data source as the homepage */}
+      <TestimonialsSection />
+
+      {/* Trust — quick facts, complements the reviews above */}
+      <section className="section-pad pt-0">
+        <div className="container-max">
+          <Reveal className="rounded-2xl border border-navy/5 bg-white p-6 shadow-card sm:p-8">
+            <p className="eyebrow">Why solar businesses work with us</p>
+            <div className="mt-5 grid gap-5 sm:grid-cols-3">
+              {[
+                {
+                  title: "2+ years, solar-only",
+                  body: "Hands-on experience running lead campaigns across installers, sellers, technicians, and maintenance teams — not a generalist agency.",
+                },
+                {
+                  title: "Exclusive leads, always",
+                  body: "Every lead goes to one business only. Nothing here is resold or shared across competitors.",
+                },
+                {
+                  title: "No lock-in",
+                  body: "Month-to-month across every package. You stay because it's working, not because of a contract.",
+                },
+              ].map((item) => (
+                <div key={item.title}>
+                  <p className="font-display text-sm font-semibold text-navy">{item.title}</p>
+                  <p className="mt-1.5 text-sm text-ink-400">{item.body}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-6 text-sm text-ink-400">
+              Want to read more?{" "}
+              <Link href="/reviews" className="font-semibold text-trust-500 hover:underline">
+                See all reviews
+              </Link>
+              .
+            </p>
+          </Reveal>
+        </div>
+      </section>
 
       {/* Quick FAQ relevant to pricing */}
       <section className="section-pad pt-0">
