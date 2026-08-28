@@ -8,8 +8,8 @@ const items = [
     ),
   },
   {
-    title: "USA, UK & Australia",
-    desc: "We run and localize campaigns for solar markets and buying behavior in all three countries.",
+    title: "USA, UK, Australia & beyond",
+    desc: "We run and localize campaigns for solar markets and buying behavior in all three countries, and take on other regions case-by-case.",
     gradient: "from-leaf-500 to-leaf-600",
     icon: (
       <>
