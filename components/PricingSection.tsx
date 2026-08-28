@@ -68,7 +68,9 @@ export default function PricingSection() {
             <Reveal key={tier.id} delay={i * 90}>
               <div
                 className={`card-lift relative flex h-full flex-col rounded-2xl border bg-white p-7 shadow-card ${
-                  tier.mostPopular ? "border-trust-500 lg:-translate-y-3 lg:shadow-soft" : "border-navy/5"
+                  tier.mostPopular
+                    ? "border-trust-500 bg-trust-50 lg:-translate-y-3 lg:shadow-soft"
+                    : "border-navy/5"
                 }`}
               >
                 {tier.mostPopular && (
@@ -99,7 +101,7 @@ export default function PricingSection() {
                 </div>
 
                 <ul className="mt-6 flex-1 space-y-2.5 text-sm text-ink-400">
-                  {tier.features.map((f) => (
+                  {tier.features.slice(0, 4).map((f) => (
                     <li key={f} className="flex items-start gap-2">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="mt-0.5 shrink-0 text-leaf-600">
                         <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -108,6 +110,24 @@ export default function PricingSection() {
                     </li>
                   ))}
                 </ul>
+
+                {tier.features.length > 4 && (
+                  <details className="group mt-2.5">
+                    <summary className="cursor-pointer list-none text-xs font-semibold text-trust-500 hover:underline">
+                      + {tier.features.length - 4} more included
+                    </summary>
+                    <ul className="mt-2.5 space-y-2.5 text-sm text-ink-400">
+                      {tier.features.slice(4).map((f) => (
+                        <li key={f} className="flex items-start gap-2">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="mt-0.5 shrink-0 text-leaf-600">
+                            <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
 
                 <Link
                   href={`/contact?package=${tier.id}`}
