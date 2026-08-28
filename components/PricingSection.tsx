@@ -3,16 +3,45 @@
 import { useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import { regions, pricingTiers, addOns, formatCurrency, type Region } from "@/lib/pricing";
+import {
+  regions,
+  tracks,
+  tiersForTrack,
+  addOns,
+  formatCurrency,
+  type Region,
+  type TrackId,
+} from "@/lib/pricing";
 
 export default function PricingSection() {
+  const [track, setTrack] = useState<TrackId>("installation");
   const [region, setRegion] = useState<Region>("us");
+  const tiers = tiersForTrack(track);
 
   return (
     <section className="section-pad pt-0 sm:pt-0">
       <div className="container-max">
+        {/* Track tabs — which kind of solar business is this for */}
+        <Reveal className="flex flex-col items-center gap-2 text-center">
+          <div className="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-navy/10 bg-white p-1 shadow-card">
+            {tracks.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTrack(t.id)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                  track === t.id ? "bg-trust-500 text-white" : "text-ink-400 hover:text-navy"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-ink-300">{tracks.find((t) => t.id === track)?.subtitle}</p>
+        </Reveal>
+
         {/* Region toggle */}
-        <Reveal className="flex justify-center">
+        <Reveal className="mt-6 flex justify-center" delay={40}>
           <div className="inline-flex items-center gap-1 rounded-full border border-navy/10 bg-white p-1 shadow-card">
             {regions.map((r) => (
               <button
@@ -30,8 +59,12 @@ export default function PricingSection() {
         </Reveal>
 
         {/* Tier cards */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-3 lg:items-start">
-          {pricingTiers.map((tier, i) => (
+        <div
+          className={`mt-10 grid gap-6 lg:items-start ${
+            tiers.length === 2 ? "sm:grid-cols-2 lg:mx-auto lg:max-w-3xl" : "lg:grid-cols-3"
+          }`}
+        >
+          {tiers.map((tier, i) => (
             <Reveal key={tier.id} delay={i * 90}>
               <div
                 className={`card-lift relative flex h-full flex-col rounded-2xl border bg-white p-7 shadow-card ${
@@ -93,8 +126,10 @@ export default function PricingSection() {
           <p className="mt-2 max-w-2xl text-sm text-ink-400">
             The monthly fee above is what you pay SolarLeadAds for campaign setup, management, and
             optimization. Ad spend is separate — you fund your own Meta ad account directly, so every
-            dollar goes toward reaching buyers, not toward our margin. This is standard practice across
-            professional ad agencies and keeps your ad spend fully visible and in your control.
+            dollar goes toward reaching buyers, not toward our margin. Installation & Sales campaigns are
+            priced for high-value, considered purchases; Cleaning & Repair campaigns are priced for
+            faster, lower-ticket local jobs — the system for each is built around how that customer
+            actually decides to buy.
           </p>
         </Reveal>
 
