@@ -42,7 +42,7 @@ export default function Hero() {
             className="mt-8 flex animate-fadeInUp flex-wrap gap-x-6 gap-y-2 text-sm text-ink-400"
             style={{ animationDelay: "270ms" }}
           >
-            {["No long-term contracts", "Exclusive leads only", "Serving USA, UK & Australia"].map((item) => (
+            {["No long-term contracts", "Exclusive leads only", "Serving USA, UK, Australia & beyond"].map((item) => (
               <li key={item} className="flex items-center gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0 text-leaf-600">
                   <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
