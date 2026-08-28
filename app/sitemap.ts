@@ -1,8 +1,40 @@
 import type { MetadataRoute } from "next";
+import { supabase } from "@/lib/supabaseClient";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Regenerate the sitemap on every request to sitemap.xml so a new blog post
+// (is_live = true in Supabase) shows up for Google without a redeploy.
+export const revalidate = 0;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://solarleadads.com";
+
+  const { data: posts, error } = await supabase
+    .from("blogs")
+    .select("slug, published_at, updated_at")
+    .eq("is_live", true)
+    .eq("lang", "en");
+
+  if (error) {
+    console.error("Sitemap: failed to fetch blog posts:", error.message);
+  }
+
+  const blogEntries: MetadataRoute.Sitemap = [
+    {
+      url: `${base}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    ...(posts ?? []).map((post) => ({
+      url: `${base}/blog/${post.slug}`,
+      lastModified: new Date(post.updated_at || post.published_at),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+  ];
+
   return [
+    ...blogEntries,
     {
       url: base,
       lastModified: new Date(),
