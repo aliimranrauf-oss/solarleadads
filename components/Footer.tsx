@@ -74,6 +74,7 @@ export default function Footer() {
             <li>
               <Link href="/australia" className="hover:text-white">Australia</Link>
             </li>
+            <li>Global (case-by-case)</li>
           </ul>
         </div>
       </div>
