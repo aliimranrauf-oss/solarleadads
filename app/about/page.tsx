@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import FinalCTA from "@/components/FinalCTA";
+import { whatsappLink } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
@@ -139,6 +140,18 @@ export default function AboutPage() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal delay={270}>
+            <p className="mt-6 text-sm text-ink-400">
+              These are the markets we&apos;ve built dedicated campaigns for — but Meta ads aren&apos;t
+              limited by geography, and we take on solar businesses outside these three on a
+              case-by-case basis.{" "}
+              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="font-semibold text-trust-500 hover:underline">
+                Message us
+              </a>{" "}
+              to check availability in your region.
+            </p>
+          </Reveal>
         </div>
       </section>
 
