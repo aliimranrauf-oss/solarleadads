@@ -12,6 +12,7 @@ export const siteConfig = {
     { label: "Results", href: "/results" },
     { label: "Process", href: "/process" },
     { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
   ],
