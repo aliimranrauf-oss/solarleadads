@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://solarleadads.com";
-  // TODO: add each page here as it's built (services, results, about, process, faq, privacy, terms)
+  // TODO: add each page here as it's built (results, process, privacy, terms)
   return [
     {
       url: base,
@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${base}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     {
       url: `${base}/faq`,
