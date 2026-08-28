@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FinalCTA from "@/components/FinalCTA";
 
@@ -22,18 +23,22 @@ const regions = [
   {
     title: "USA",
     body: "Campaigns targeted to US solar buyers, with lead capture built around US TCPA consent language.",
+    href: "/usa",
   },
   {
     title: "UK",
     body: "Campaigns localized for UK solar buying behavior and lead-capture expectations.",
+    href: "/uk",
   },
   {
     title: "Australia",
     body: "Campaigns localized for the Australian solar market and buyer intent.",
+    href: "/australia",
   },
   {
     title: "Global",
-    body: "Outside these three, we take on solar businesses on a case-by-case basis — message us to check availability in your region.",
+    body: "Outside these three, we take on solar businesses on a case-by-case basis.",
+    href: "/global",
   },
 ];
 
@@ -137,9 +142,14 @@ export default function AboutPage() {
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {regions.map((region, i) => (
-              <Reveal key={region.title} delay={i * 90} className="card-lift rounded-2xl border border-navy/5 bg-white p-6 shadow-card">
-                <p className="font-display text-sm font-semibold text-navy">{region.title}</p>
-                <p className="mt-1.5 text-sm text-ink-400">{region.body}</p>
+              <Reveal key={region.title} delay={i * 90}>
+                <Link
+                  href={region.href}
+                  className="card-lift block rounded-2xl border border-navy/5 bg-white p-6 shadow-card"
+                >
+                  <p className="font-display text-sm font-semibold text-navy">{region.title}</p>
+                  <p className="mt-1.5 text-sm text-ink-400">{region.body}</p>
+                </Link>
               </Reveal>
             ))}
           </div>
