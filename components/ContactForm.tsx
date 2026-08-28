@@ -12,7 +12,14 @@ const AD_SPEND_OPTIONS = [
 
 const initialState: SubmitLeadState = { status: "idle" };
 
-export default function ContactForm({ source = "contact_page" }: { source?: string }) {
+export default function ContactForm({
+  source = "contact_page",
+  presetPackage = null,
+}: {
+  source?: string;
+  /** Set when the visitor arrived via a "Choose [tier]" button on /services. */
+  presetPackage?: { id: string; name: string } | null;
+}) {
   const [state, formAction, isPending] = useActionState(submitLead, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -33,6 +40,12 @@ export default function ContactForm({ source = "contact_page" }: { source?: stri
   return (
     <form ref={formRef} action={formAction} className="space-y-5">
       <input type="hidden" name="source" value={source} />
+
+      {presetPackage && (
+        <div className="flex items-center justify-between gap-3 rounded-xl bg-trust-50 px-4 py-3 text-sm font-medium text-trust-600">
+          Inquiring about the {presetPackage.name} package
+        </div>
+      )}
 
       {/* Honeypot — hidden from real users, visible to bots. Do not remove.
           Field name is deliberately generic/nonsensical so browser autofill
