@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import FinalCTA from "@/components/FinalCTA";
-import { whatsappLink } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
@@ -31,6 +30,10 @@ const regions = [
   {
     title: "Australia",
     body: "Campaigns localized for the Australian solar market and buyer intent.",
+  },
+  {
+    title: "Global",
+    body: "Outside these three, we take on solar businesses on a case-by-case basis — message us to check availability in your region.",
   },
 ];
 
@@ -129,10 +132,10 @@ export default function AboutPage() {
         <div className="container-max">
           <Reveal>
             <p className="eyebrow">Regions served</p>
-            <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">USA, UK & Australia.</h2>
+            <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">USA, UK, Australia & beyond.</h2>
           </Reveal>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {regions.map((region, i) => (
               <Reveal key={region.title} delay={i * 90} className="card-lift rounded-2xl border border-navy/5 bg-white p-6 shadow-card">
                 <p className="font-display text-sm font-semibold text-navy">{region.title}</p>
@@ -140,18 +143,6 @@ export default function AboutPage() {
               </Reveal>
             ))}
           </div>
-
-          <Reveal delay={270}>
-            <p className="mt-6 text-sm text-ink-400">
-              These are the markets we&apos;ve built dedicated campaigns for — but Meta ads aren&apos;t
-              limited by geography, and we take on solar businesses outside these three on a
-              case-by-case basis.{" "}
-              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="font-semibold text-trust-500 hover:underline">
-                Message us
-              </a>{" "}
-              to check availability in your region.
-            </p>
-          </Reveal>
         </div>
       </section>
 
