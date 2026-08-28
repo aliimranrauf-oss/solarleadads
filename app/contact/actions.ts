@@ -89,7 +89,7 @@ export async function submitLead(
 
     // Optional email notification — only fires if RESEND_API_KEY is set,
     // so the form still works fully before that's configured.
-    await notifyByEmail({ name, email, company, phone, websiteUrl, adSpendRange, message });
+    await notifyByEmail({ name, email, company, phone, websiteUrl, adSpendRange, message, source });
 
     return {
       status: "success",
@@ -105,6 +105,18 @@ export async function submitLead(
   }
 }
 
+// Turns a source like "pricing_growth" into a readable label for the
+// notification email. Falls back to the raw source for anything else
+// (e.g. "contact_page").
+function describeSource(source: string): string {
+  if (source.startsWith("pricing_")) {
+    const tierId = source.replace("pricing_", "");
+    const label = tierId.charAt(0).toUpperCase() + tierId.slice(1);
+    return `Pricing page — ${label} package`;
+  }
+  return source;
+}
+
 async function notifyByEmail(lead: {
   name: string;
   email: string;
@@ -113,6 +125,7 @@ async function notifyByEmail(lead: {
   websiteUrl: string;
   adSpendRange: string | null;
   message: string;
+  source: string;
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.NOTIFY_EMAIL_TO;
@@ -136,6 +149,7 @@ async function notifyByEmail(lead: {
           `Phone: ${lead.phone || "—"}`,
           `Website / Ad Library link: ${lead.websiteUrl || "—"}`,
           `Ad spend: ${lead.adSpendRange || "—"}`,
+          `Came from: ${describeSource(lead.source)}`,
           "",
           "Message:",
           lead.message,
