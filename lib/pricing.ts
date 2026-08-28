@@ -6,8 +6,24 @@ export const regions: { id: Region; label: string; currency: string }[] = [
   { id: "au", label: "Australia", currency: "A$" },
 ];
 
+export type TrackId = "installation" | "local";
+
+export const tracks: { id: TrackId; label: string; subtitle: string }[] = [
+  {
+    id: "installation",
+    label: "Installation & Sales",
+    subtitle: "For installers, battery & panel sellers, full system sellers",
+  },
+  {
+    id: "local",
+    label: "Cleaning & Repair",
+    subtitle: "For cleaning crews, technicians, and maintenance teams",
+  },
+];
+
 export type PricingTier = {
-  id: "starter" | "growth" | "scale";
+  id: "starter" | "growth" | "scale" | "essentials" | "plus";
+  track: TrackId;
   name: string;
   mostPopular?: boolean;
   tagline: string;
@@ -20,8 +36,10 @@ export type PricingTier = {
 };
 
 export const pricingTiers: PricingTier[] = [
+  // --- Installation & Sales track (high-ticket) ---
   {
     id: "starter",
+    track: "installation",
     name: "Starter",
     tagline: "For new or small solar businesses getting started with paid leads",
     fee: { us: 997, uk: 850, au: 1650 },
@@ -40,6 +58,7 @@ export const pricingTiers: PricingTier[] = [
   },
   {
     id: "growth",
+    track: "installation",
     name: "Growth",
     mostPopular: true,
     tagline: "For established businesses ready to scale lead volume",
@@ -59,6 +78,7 @@ export const pricingTiers: PricingTier[] = [
   },
   {
     id: "scale",
+    track: "installation",
     name: "Scale",
     tagline: "For multi-location teams and panel/battery distributors",
     fee: { us: 2997, uk: 2500, au: 4950 },
@@ -71,6 +91,43 @@ export const pricingTiers: PricingTier[] = [
       "Higher-intent solar calculator funnel",
       "Full CRM automation & pipeline build",
       "Weekly reporting + priority 24h support",
+      "Unqualified leads replaced free",
+    ],
+  },
+
+  // --- Local Service Leads track (cleaning, repair, maintenance — low-ticket) ---
+  {
+    id: "essentials",
+    track: "local",
+    name: "Essentials",
+    tagline: "For solar cleaning, repair & maintenance pros getting started with local leads",
+    fee: { us: 497, uk: 425, au: 800 },
+    adSpendMin: { us: 800, uk: 650, au: 1300 },
+    leadsEstimate: "30–50 local leads/month",
+    features: [
+      "Simple lead form — no custom funnel needed",
+      "1–2 ad angles built around local, fast-decision jobs",
+      "Instant WhatsApp + email lead delivery",
+      "Monthly performance reporting",
+      "Month-to-month — no long-term contract",
+      "Unqualified leads replaced free",
+    ],
+  },
+  {
+    id: "plus",
+    track: "local",
+    name: "Plus",
+    mostPopular: true,
+    tagline: "For local pros ready for more volume and repeat seasonal demand",
+    fee: { us: 697, uk: 575, au: 1150 },
+    adSpendMin: { us: 1200, uk: 950, au: 1900 },
+    leadsEstimate: "60–90 local leads/month",
+    features: [
+      "Everything in Essentials, plus:",
+      "3–4 ad creatives, incl. seasonal offers",
+      "Retargeting for past inquiries",
+      "Bi-weekly performance reporting",
+      "Priority WhatsApp support",
       "Unqualified leads replaced free",
     ],
   },
@@ -97,6 +154,10 @@ export const addOns = [
 export function findTier(id?: string | null): PricingTier | undefined {
   if (!id) return undefined;
   return pricingTiers.find((t) => t.id === id);
+}
+
+export function tiersForTrack(trackId: TrackId): PricingTier[] {
+  return pricingTiers.filter((t) => t.track === trackId);
 }
 
 export function formatCurrency(region: Region, amount: number): string {
