@@ -42,13 +42,17 @@ export async function generateMetadata({
       siteName: "SolarLeadAds",
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
-      images: post.image_url ? [{ url: post.image_url, width: 1200, height: 630 }] : undefined,
+      images: [
+        post.image_url
+          ? { url: post.image_url, width: 1200, height: 630 }
+          : { url: "/og-image.jpg", width: 1200, height: 630 },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt || "",
-      images: post.image_url ? [post.image_url] : undefined,
+      images: [post.image_url || "/og-image.jpg"],
     },
     robots: {
       index: true,
@@ -111,7 +115,7 @@ export default async function BlogPostPage({
     },
     headline: post.title,
     description: post.excerpt || "",
-    image: post.image_url ? [post.image_url] : undefined,
+    image: [post.image_url || "https://solarleadads.com/og-image.jpg"],
     datePublished: post.published_at,
     dateModified: post.updated_at || post.published_at,
     author: {
