@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Get a Free Lead Audit",
   description:
     "Tell us about your solar business and get a free, personalized audit of where your current lead generation stands.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage({
