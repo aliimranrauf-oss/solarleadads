@@ -17,12 +17,21 @@ export const metadata: Metadata = {
     url: "https://solarleadads.com/blog",
     type: "website",
     siteName: "SolarLeadAds",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "SolarLeadAds Blog — Solar Marketing Tips",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Solar Marketing Blog — Lead Generation Tips for Solar Businesses",
     description:
       "Guides on Meta ads, lead generation, and growth for solar installers, sellers, and technicians.",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
