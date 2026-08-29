@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import TrustBar from "@/components/TrustBar";
 import ProblemSection from "@/components/ProblemSection";
@@ -13,6 +14,10 @@ import FinalCTA from "@/components/FinalCTA";
 // most every 60s instead of baking them in at build time — otherwise
 // newly-approved reviews in Supabase won't show up until the next deploy.
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (
