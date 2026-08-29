@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
 import MobileNav from "@/components/MobileNav";
 
@@ -7,11 +8,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-navy/5 bg-surface/90 backdrop-blur">
       <div className="container-max relative flex items-center justify-between px-6 py-4 sm:px-10">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-navy">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M4 20L10 4H14L20 20H16L14.5 15.5H9.5L8 20H4Z" fill="#F2A93B" />
-              <path d="M10.5 12H13.5" stroke="#0B2545" strokeWidth="1.4" />
-            </svg>
+          <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-navy">
+            <Image src="/logo.png" alt="SolarLeadAds logo" width={32} height={32} className="h-full w-full object-cover" priority />
           </span>
           Solar<span className="text-trust-500">LeadAds</span>
         </Link>
