@@ -6,6 +6,7 @@ import ReviewForm from "@/components/ReviewForm";
 export const metadata: Metadata = {
   title: "Client Reviews",
   description: "See what solar businesses say about working with SolarLeadAds, and leave your own review.",
+  alternates: { canonical: "/reviews" },
 };
 
 // Refetch approved reviews from Supabase at most every 60s instead of
