@@ -38,12 +38,21 @@ export const metadata: Metadata = {
     url: "https://solarleadads.com",
     siteName: "SolarLeadAds",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "SolarLeadAds — Meta Ads Lead Generation for Solar Businesses",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SolarLeadAds — Meta Ads Lead Generation for Solar Businesses",
     description:
       "Qualified Meta ad leads for solar installers, sellers, and technicians in the USA, UK, and Australia.",
+    images: ["/og-image.jpg"],
   },
 };
 
