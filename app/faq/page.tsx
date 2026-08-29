@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "FAQ",
   description:
     "Answers to the questions solar businesses ask most about leads, Meta/Facebook & Instagram access, pricing, and how working with SolarLeadAds works.",
+  alternates: { canonical: "/faq" },
 };
 
 type Faq = { q: string; a: string };
