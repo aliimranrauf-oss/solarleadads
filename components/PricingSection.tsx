@@ -162,10 +162,40 @@ export default function PricingSection() {
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
             {addOns.map((addOn, i) => (
               <Reveal key={addOn.name} delay={i * 80}>
-                <div className="h-full rounded-2xl border border-navy/5 bg-white p-5 shadow-card">
-                  <p className="font-display text-sm font-semibold text-navy">{addOn.name}</p>
+                <div className="flex h-full flex-col rounded-2xl border border-navy/5 bg-white p-5 shadow-card">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-display text-sm font-semibold text-navy">{addOn.name}</p>
+                    {addOn.standalone && (
+                      <span className="shrink-0 rounded-full bg-leaf-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-leaf-600">
+                        Stand-alone OK
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm font-semibold text-trust-500">{addOn.price}</p>
                   <p className="mt-2 text-sm text-ink-400">{addOn.description}</p>
+
+                  <ul className="mt-3 space-y-1.5 text-xs text-ink-400">
+                    {addOn.details.map((d) => (
+                      <li key={d} className="flex items-start gap-1.5">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="mt-0.5 shrink-0 text-leaf-600">
+                          <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        {d}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {addOn.standaloneNote && (
+                    <p
+                      className={`mt-3 rounded-lg px-3 py-2 text-xs ${
+                        addOn.standalone
+                          ? "bg-leaf-50 text-leaf-600"
+                          : "bg-surface-alt text-ink-400"
+                      }`}
+                    >
+                      {addOn.standaloneNote}
+                    </p>
+                  )}
                 </div>
               </Reveal>
             ))}
