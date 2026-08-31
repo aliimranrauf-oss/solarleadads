@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/terms" },
 };
 
-const LAST_UPDATED = "August 28, 2026";
+const LAST_UPDATED = "August 31, 2026";
 
 function Section({
   id,
@@ -94,7 +94,22 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="leads" title="5. Leads">
+            <Section id="billing" title="5. Billing & payment">
+              <p>
+                The monthly management fee is billed in advance of the service period it covers,
+                and is separate from your ad spend (see Section 4 — we never touch or invoice your
+                ad budget). Invoices are sent via Payoneer, a secure third-party payment platform;
+                you don&apos;t need a Payoneer account of your own to pay — you can pay using a
+                debit or credit card, or PayPal, directly from the link we send.
+              </p>
+              <p>
+                Renewal invoices are sent a few days ahead of your next billing date. If a renewal
+                payment isn&apos;t received by the due date, campaign work may be paused until
+                payment is completed.
+              </p>
+            </Section>
+
+            <Section id="leads" title="6. Leads">
               <p>
                 Leads generated for your campaign are delivered to you exclusively and are not
                 resold or shared with other businesses. We aim for lead quality but can&apos;t
@@ -104,7 +119,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="your-responsibilities" title="6. Your responsibilities">
+            <Section id="your-responsibilities" title="7. Your responsibilities">
               <ul className="list-disc space-y-2 pl-5">
                 <li>Provide accurate information when submitting forms or setting up a campaign.</li>
                 <li>Hold any licenses, certifications, or permits your jurisdiction requires to sell or install solar products.</li>
@@ -113,7 +128,7 @@ export default function TermsPage() {
               </ul>
             </Section>
 
-            <Section id="third-party-platforms" title="7. Third-party platforms">
+            <Section id="third-party-platforms" title="8. Third-party platforms">
               <p>
                 Our services rely on third-party platforms — principally Meta&apos;s advertising
                 platform, along with WhatsApp for messaging and Supabase for form storage. We
@@ -123,7 +138,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="ip" title="8. Intellectual property">
+            <Section id="ip" title="9. Intellectual property">
               <p>
                 The content on this website — text, graphics, and design — belongs to{" "}
                 {siteConfig.name} unless otherwise noted, and may not be copied or reused without
@@ -132,7 +147,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="disclaimers" title="9. Disclaimers">
+            <Section id="disclaimers" title="10. Disclaimers">
               <p>
                 This website and the information on it are provided &quot;as is.&quot; While we
                 aim for accuracy, we don&apos;t guarantee that the site will be error-free or
@@ -141,7 +156,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="liability" title="10. Limitation of liability">
+            <Section id="liability" title="11. Limitation of liability">
               <p>
                 To the extent permitted by law, {siteConfig.name} is not liable for indirect,
                 incidental, or consequential damages arising from your use of this website or our
@@ -151,7 +166,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="governing-law" title="11. Governing law">
+            <Section id="governing-law" title="12. Governing law">
               <p>
                 Because we serve clients across the USA, UK, and Australia, the governing law and
                 jurisdiction for a specific client engagement are set out in that engagement&apos;s
@@ -161,7 +176,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="changes" title="12. Changes to these terms">
+            <Section id="changes" title="13. Changes to these terms">
               <p>
                 We may update these terms from time to time. The &quot;last updated&quot; date at
                 the top of this page reflects the most recent revision. Continued use of the site
@@ -169,7 +184,7 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section id="contact" title="13. Contact us">
+            <Section id="contact" title="14. Contact us">
               <p>
                 Questions about these terms can be sent to{" "}
                 <a href={`mailto:${siteConfig.email}`} className="font-semibold text-trust-500 hover:underline">
