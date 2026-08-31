@@ -92,6 +92,10 @@ const categories: Category[] = [
         q: "How soon can my campaign go live?",
         a: "Once we have your business details and Meta access, most campaigns are ready to launch within a few business days.",
       },
+      {
+        q: "How and when do I pay?",
+        a: "Once you confirm a package, we send you a secure payment link through Payoneer — a widely-used international payment platform, similar to how PayPal or Stripe work. You don't need a Payoneer account yourself: the link lets you pay with your debit or credit card, or PayPal, whichever you prefer. The monthly management fee is billed in advance, before that month's work begins, and renewal invoices are sent a few days before your next billing date so there's no interruption to your campaign.",
+      },
     ],
   },
 ];
