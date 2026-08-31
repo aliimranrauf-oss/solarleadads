@@ -38,7 +38,7 @@ const categories: Category[] = [
     faqs: [
       {
         q: "How do I receive new leads?",
-        a: "Through the method you prefer — a form submission on your own site, a WhatsApp message, or email notification. We don't route leads through phone calls.",
+        a: "Through the method you prefer — a form submission on your own site, a WhatsApp message, or email notification, delivered the moment a new lead comes in. From there, following up by phone is often the fastest way to convert a solar lead, so you're always free to call your leads directly — we just don't personally handle or join those calls ourselves; that's between you and your customer.",
       },
       {
         q: "What happens if a lead is low quality?",
