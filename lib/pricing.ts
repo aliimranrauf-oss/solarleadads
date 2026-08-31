@@ -133,21 +133,54 @@ export const pricingTiers: PricingTier[] = [
   },
 ];
 
-export const addOns = [
+export type AddOn = {
+  name: string;
+  price: string;
+  description: string;
+  /** Specific inclusions — shown as a short bullet list under the description. */
+  details: string[];
+  /** True if this can be bought on its own, without a full lead-gen package. */
+  standalone?: boolean;
+  standaloneNote?: string;
+};
+
+export const addOns: AddOn[] = [
   {
     name: "Website / Funnel Build",
     price: "One-time, from $750",
     description: "For clients who don't yet have a landing page built to convert Meta traffic.",
+    details: [
+      "Mobile-first landing page, built to convert paid traffic",
+      "Fast load speed + tracking pixels installed",
+      "1 round of revisions included",
+      "Delivered in 5–7 business days",
+    ],
+    standalone: true,
+    standaloneNote: "Just need a converting page? This works as a stand-alone project — no ad management required.",
   },
   {
     name: "AI Appointment Setter",
     price: "+$400/month",
     description: "Automatically follows up and books qualified leads onto your calendar.",
+    details: [
+      "Instant SMS/WhatsApp reply to every new lead",
+      "Automated follow-up sequence until booked or disqualified",
+      "Books directly onto your calendar — no manual chasing",
+    ],
+    standalone: false,
+    standaloneNote: "Requires an active lead package — it needs leads flowing in to follow up on.",
   },
   {
     name: "Google Ads Add-on",
     price: "+$800/month",
     description: "Capture high-intent Google searches alongside your Meta campaigns.",
+    details: [
+      "Search campaign setup targeting high-intent local keywords",
+      "Call tracking so you know which leads came from Google",
+      "Reported alongside your Meta results, same dashboard",
+    ],
+    standalone: true,
+    standaloneNote: "Prefer search intent over social? This can run as your primary lead channel on its own.",
   },
 ];
 
