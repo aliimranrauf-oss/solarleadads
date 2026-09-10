@@ -69,11 +69,16 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(14px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shadowPulse: {
+          "0%, 100%": { transform: "translateX(-50%) scale(1)", opacity: "0.45" },
+          "50%": { transform: "translateX(-50%) scale(0.7)", opacity: "0.2" },
+        },
       },
       animation: {
         panelPulse: "panelPulse 3.2s ease-in-out infinite",
         floatSlow: "floatSlow 6s ease-in-out infinite",
         fadeInUp: "fadeInUp 0.6s ease-out both",
+        shadowPulse: "shadowPulse 6s ease-in-out infinite",
       },
     },
   },
