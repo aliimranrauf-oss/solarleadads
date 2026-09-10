@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 
 export type ChatBotReply = {
   text: string;
@@ -32,22 +33,6 @@ let idCounter = 0;
 function nextId(): string {
   idCounter += 1;
   return `msg-${idCounter}-${Date.now()}`;
-}
-
-function ChatBubbleIcon({ size = 24 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 12c0-4.4 3.8-8 8.5-8s8.5 3.6 8.5 8-3.8 8-8.5 8c-1.1 0-2.1-.2-3-.5L4 21l1.6-4.2C4.6 15.5 4 13.8 4 12Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <circle cx="8.5" cy="12" r="1.1" fill="currentColor" />
-      <circle cx="12.5" cy="12" r="1.1" fill="currentColor" />
-      <circle cx="16.5" cy="12" r="1.1" fill="currentColor" />
-    </svg>
-  );
 }
 
 function CloseIcon({ size = 18 }: { size?: number }) {
@@ -232,24 +217,51 @@ export default function ChatWidget({
         type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-label={isOpen ? "Close chat" : "Open chat"}
-        className="fixed bottom-24 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-trust-500 text-white shadow-soft transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center sm:bottom-6 sm:right-6"
       >
-        {isOpen ? <CloseIcon /> : <ChatBubbleIcon />}
-        {!isOpen && (
-          <span
-            aria-hidden="true"
-            className="absolute right-0 top-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-leaf-500"
-          />
+        {isOpen ? (
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-trust-500 text-white shadow-soft transition-transform hover:scale-105">
+            <CloseIcon />
+          </span>
+        ) : (
+          <>
+            {/* Soft ellipse "ground shadow" beneath the icon — shrinks and
+                fades as the icon rises, sold together with the bob above
+                it as one hovering object. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 left-1/2 h-2.5 w-10 animate-shadowPulse rounded-full bg-navy/50 blur-[3px]"
+            />
+            <span className="relative block h-14 w-14 animate-floatSlow overflow-hidden rounded-full shadow-[0_10px_18px_-4px_rgba(11,37,69,0.4)] transition-transform hover:scale-105">
+              <Image
+                src="/chatbot-icon.jpg"
+                alt="Chat with Sol"
+                fill
+                sizes="56px"
+                className="object-cover"
+              />
+              {/* Diagonal gloss highlight for a glossy, floating read
+                  rather than a flat sticker look. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-tr from-white/0 via-white/25 to-white/0"
+              />
+            </span>
+            <span
+              aria-hidden="true"
+              className="absolute right-1 top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-leaf-500"
+            />
+          </>
         )}
       </button>
 
       {isOpen && (
-        <div className="fixed inset-x-0 bottom-0 z-50 flex h-[80vh] w-full flex-col rounded-t-2xl border border-navy/10 bg-white shadow-soft sm:inset-auto sm:bottom-[168px] sm:right-5 sm:h-[500px] sm:w-[360px] sm:rounded-xl2">
+        <div className="fixed inset-x-0 bottom-0 z-50 flex h-[80vh] w-full flex-col rounded-t-2xl border border-navy/10 bg-white shadow-soft sm:inset-auto sm:bottom-24 sm:right-6 sm:h-[500px] sm:w-[360px] sm:rounded-xl2">
           {/* Header */}
           <div className="flex items-center justify-between rounded-t-2xl border-b border-navy/10 bg-surface-alt px-4 py-3 sm:rounded-t-xl2">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-trust-500/10 text-trust-500">
-                <ChatBubbleIcon size={18} />
+              <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-trust-500/10">
+                <Image src="/chatbot-icon.jpg" alt="Sol" fill sizes="36px" className="object-cover" />
               </span>
               <div>
                 <p className="font-display text-sm font-semibold text-navy">{botName}</p>
