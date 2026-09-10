@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SolarChatBot from "@/components/SolarChatBot";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -75,6 +76,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <WhatsAppButton />
+        <SolarChatBot />
         {/* Only loads if NEXT_PUBLIC_GA_MEASUREMENT_ID is set in Vercel env
             vars — safe to deploy even before you have a GA4 property. */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
