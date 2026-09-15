@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { regions, tracks, pricingTiers, addOns, formatCurrency, type PricingTier } from "@/lib/pricing";
 import { chatbotFaqs, faqs } from "@/lib/chatbot/knowledge";
 import { PERSONA } from "@/lib/chatbot/persona";
+import { siteConfig } from "@/lib/site-config";
 
 export const runtime = "nodejs";
 
@@ -202,7 +203,7 @@ function buildSystemPrompt(): string {
   // automatically — nothing to keep in sync by hand.
   return `You are the assistant for SolarLeadAds.com. The business has two service lines, both built only for the solar industry: (1) Meta (Facebook/Instagram) ads lead generation, and (2) custom AI chatbot development for solar businesses worldwide. Every visitor is a solar business, not a homeowner.
 
-Answer questions about pricing, leads, regions covered, Meta ad access, the onboarding process, and the AI chatbot service using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team via the contact form. Keep answers short: 2 to 4 sentences, unless listing pricing tiers.
+Answer questions about pricing, leads, regions covered, Meta ad access, the onboarding process, and the AI chatbot service using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team via the contact form. Keep answers short and follow the MESSAGE FORMATTING rules in the persona below exactly — this is a chat widget, not an email.
 
 Always respond to the visitor's most recent message specifically — read it carefully before answering. If it asks something different from your previous reply, address that new question directly instead of repeating your last answer. Never pad an answer with pricing info the visitor didn't ask about in their latest message.
 
@@ -222,7 +223,7 @@ ${faqText}
 FAQs — AI chatbot development service:
 ${chatbotFaqText}
 
-If the user expresses interest in starting a campaign, getting a lead audit, having an AI chatbot built, or hiring the team in any other way, ask for their name, email, and company name so the team can follow up. The moment you send a reply that asks for their name/email/company, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
+If the user expresses interest in starting a campaign, getting a lead audit, having an AI chatbot built, or hiring the team in any other way: do NOT ask them to type their name, email, company, or website into the chat. Instead, in one short sentence, let them know a quick form will appear below, or they can message ${siteConfig.whatsappDisplayNumber} on WhatsApp for a faster reply. End that exact reply with the marker [[COLLECT_CONTACT]] on its own line — this makes the quote-form and WhatsApp buttons appear in the widget. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
 }
 
 const SYSTEM_PROMPT = buildSystemPrompt();
