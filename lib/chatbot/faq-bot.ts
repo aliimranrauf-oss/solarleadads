@@ -40,6 +40,35 @@ type Entry = {
 // context. See hasChatbotContext() below.
 const GENERIC_PRICING_KEYWORDS = ["price", "pricing", "cost", "how much", "fee", "fees", "rates"];
 
+// This whole site is solar-only (see the system prompt in app/api/chat/route.ts:
+// "Every visitor is a solar business, not a homeowner"). The free bot has no
+// such reminder built in, so a message like "I want an AI chatbot for my
+// restaurant" was being answered with an enthusiastic "yes, we build that!"
+// — technically true of the chatbot service in isolation, but wrong for this
+// business. If a clearly non-solar business type is named and nothing solar
+// is mentioned alongside it, say so instead of confirming interest.
+// Root-truncated on purpose (like "restaur" not "restaurant") so common
+// typos and plurals still match — the same prefix-matching containsKeyword
+// already relies on ("price" matching "prices"/"priced"). Short/ambiguous
+// roots that could false-positive inside unrelated words are deliberately
+// left out ("bar" would match "barely"/"bargain", "pub" would match
+// "public" — not included for that reason).
+const NON_SOLAR_BUSINESS_KEYWORDS = [
+  "restaur", "cafe", "coffee shop", "bakery", "salon", "barber", "spa", "gym",
+  "fitness studio", "dentist", "dental", "clinic", "hospital", "hotel", "motel",
+  "real estate", "realtor", "law firm", "lawyer", "attorney", "accountant",
+  "plumb", "electrician", "hvac", "landscap", "lawn care", "pet groom",
+  "veterinar", "auto repair", "car dealership", "nightclub", "retail store",
+  "boutique", "clothing store", "grocery store", "supermarket", "daycare",
+  "childcare", "tattoo", "photography studio", "florist",
+];
+const SOLAR_KEYWORDS = ["solar", "photovoltaic", " pv "];
+
+function mentionsOutOfScopeBusiness(normalized: string): boolean {
+  if (SOLAR_KEYWORDS.some((k) => containsKeyword(normalized, k.trim()))) return false;
+  return NON_SOLAR_BUSINESS_KEYWORDS.some((k) => containsKeyword(normalized, k));
+}
+
 function normalize(input: string): string {
   return input
     .toLowerCase()
@@ -225,6 +254,18 @@ export function getFaqResponse(userMessage: string, history: FaqHistoryMessage[]
   const normalized = normalize(userMessage);
   const wordCount = normalized.split(" ").filter(Boolean).length;
   const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => containsKeyword(normalized, k));
+
+  // Out-of-scope check runs FIRST, ahead of every other entry — a message
+  // naming a non-solar business should never get a confident "yes we do
+  // that" answer, even if it also happens to match a chatbot/pricing
+  // keyword below.
+  if (mentionsOutOfScopeBusiness(normalized)) {
+    return {
+      text: "Just to flag — we only build for the solar industry (installers, sellers, wholesale suppliers, battery providers, maintenance teams, and solar cleaning companies). If your business isn't solar-related, this wouldn't be a fit, sorry! Know someone in solar who could use this, though? Feel free to send them our way.",
+      suggestQuote: false,
+      matched: true,
+    };
+  }
 
   for (const entry of ENTRIES) {
     if (entry.maxWords !== undefined && wordCount > entry.maxWords) continue;
