@@ -7,6 +7,8 @@ export const siteConfig = {
   email: "hello@solarleadads.com",
   // WhatsApp number in international format, no +, no spaces, no leading zeros.
   whatsappNumber: "447462230676",
+  // Human-readable version of the same number, for showing in chat text/UI.
+  whatsappDisplayNumber: "+44 7462 230676",
   whatsappDefaultMessage:
     "Hi SolarLeadAds, I'd like to talk about lead generation for my solar business.",
   // "Services" groups our two service lines under one dropdown instead of
