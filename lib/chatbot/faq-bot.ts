@@ -4,7 +4,7 @@
 // and it never claims to be AI.
 
 import { addOns, tiersForTrack } from "@/lib/pricing";
-import { faqs, LEAD_INTENT_KEYWORDS } from "./knowledge";
+import { chatbotFaqs, faqs, LEAD_INTENT_KEYWORDS } from "./knowledge";
 
 export type FaqBotReply = {
   text: string;
@@ -29,6 +29,26 @@ function normalize(input: string): string {
     .trim();
 }
 
+function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * True when `keyword` appears in `haystack` starting at a word boundary.
+ *
+ * A plain `.includes()` here caused false positives on short keywords: the
+ * greeting keyword "hi" matched inside "karac-hi" and "t-hi-s", so "what is
+ * the weather in Karachi" and "how does this work" both got answered with
+ * "Hey! I can help with..." instead of falling through to a real answer.
+ *
+ * Only the START of the keyword is anchored, not the end. That's deliberate —
+ * it still lets "price" match "prices"/"priced" and "fee" match "fees", which
+ * the keyword lists below rely on, while blocking mid-word collisions.
+ */
+function containsKeyword(haystack: string, keyword: string): boolean {
+  return new RegExp(`\\b${escapeRegex(keyword)}`).test(haystack);
+}
+
 function buildEntries(): Entry[] {
   const entries: Entry[] = [];
 
@@ -46,6 +66,70 @@ function buildEntries(): Entry[] {
     { keywords: ["remove your access", "revoke access", "take back access"], response: faqs[9].a },
     { keywords: ["how soon", "how fast can i start", "when can i launch", "go live"], response: faqs[11].a },
     { keywords: ["how do i pay", "how and when do i pay", "payoneer", "payment link"], response: faqs[12].a }
+  );
+
+  // --- AI CHATBOT SERVICE ---
+  // Deliberately placed BEFORE the pricing entry below: the pricing entry
+  // matches the generic keyword "how much", which would otherwise swallow
+  // "how much does an AI chatbot cost" and answer with Meta ads tiers.
+  // First match wins in getFaqResponse(), so order here is load-bearing.
+  entries.push(
+    {
+      keywords: [
+        "chatbot cost",
+        "chat bot cost",
+        "chatbot price",
+        "chat bot price",
+        "chatbot pricing",
+        "cost of a chatbot",
+        "how much is a chatbot",
+        "how much does a chatbot",
+        "how much does an ai chatbot",
+      ],
+      response: chatbotFaqs[7].a,
+    },
+    {
+      keywords: [
+        "build a chatbot",
+        "build an ai",
+        "do you build chatbot",
+        "do you make chatbot",
+        "do you build ai",
+        "chatbot service",
+        "ai chatbot for my",
+        "chatbot for my website",
+        "chat bot for my website",
+      ],
+      response: chatbotFaqs[0].a,
+    },
+    {
+      keywords: ["what does the chatbot do", "what can the chatbot", "chatbot features", "what does the bot do"],
+      response: chatbotFaqs[1].a,
+    },
+    {
+      keywords: ["trained on", "train the bot", "train the chatbot", "knowledge base", "my own information"],
+      response: chatbotFaqs[2].a,
+    },
+    {
+      keywords: ["wordpress", "shopify", "webflow", "wix", "install the bot", "install the chatbot", "embed"],
+      response: chatbotFaqs[5].a,
+    },
+    {
+      keywords: ["how long to build", "chatbot timeline", "how long does the chatbot", "delivery time"],
+      response: chatbotFaqs[6].a,
+    },
+    {
+      keywords: ["token", "api cost", "api usage", "hybrid", "keep costs low"],
+      response: chatbotFaqs[4].a,
+    },
+    {
+      keywords: ["who owns", "own the data", "conversation data", "data ownership"],
+      response: chatbotFaqs[9].a,
+    },
+    {
+      keywords: ["maintain the bot", "chatbot support", "after it goes live", "ongoing support"],
+      response: chatbotFaqs[8].a,
+    }
   );
 
   // Pricing summary — tier names, taglines, and lead estimates only (no
@@ -68,7 +152,8 @@ function buildEntries(): Entry[] {
   // Small talk.
   entries.push({
     keywords: ["hello", "hi", "hey", "good morning", "good afternoon"],
-    response: "Hey! Ask me about pricing, leads, regions we cover, or how Meta ad access works — happy to help.",
+    response:
+      "Hey! I can help with two things: Meta ad campaigns that bring exclusive leads to your solar business, and custom AI chatbots we build for solar companies worldwide. Ask me about pricing, leads, regions, or the chatbot service — whatever's useful.",
   });
 
   // "What's the process?" — common follow-up, grounded rather than
@@ -78,6 +163,10 @@ function buildEntries(): Entry[] {
       "process",
       "how it works",
       "how does it work",
+      "how does this work",
+      "how does all this work",
+      "what s the process",
+      "whats the process",
       "how do you work",
       "what steps",
       "what happens next",
@@ -96,10 +185,10 @@ const ENTRIES = buildEntries();
 
 export function getFaqResponse(userMessage: string): FaqBotReply {
   const normalized = normalize(userMessage);
-  const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => normalized.includes(k));
+  const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => containsKeyword(normalized, k));
 
   for (const entry of ENTRIES) {
-    if (entry.keywords.some((k) => normalized.includes(k))) {
+    if (entry.keywords.some((k) => containsKeyword(normalized, k))) {
       return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
     }
   }
@@ -115,7 +204,8 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   }
 
   return {
-    text: "I didn't quite catch that — I can answer questions about pricing, leads, regions, and Meta ad access. For anything else, let's get you to a real person.",
+    text:
+      "I didn't quite catch that — I can answer questions about our Meta ads lead generation (pricing, lead quality, regions, ad account access) and about the AI chatbots we build for solar businesses. For anything else, let's get you to a real person.",
     suggestQuote: true,
     matched: false,
   };
