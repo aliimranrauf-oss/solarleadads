@@ -8,18 +8,25 @@ function delay(ms: number) {
 }
 
 // Messages this short/low-effort almost never need real AI reasoning (e.g.
-// "ok", "hi", "??", a single emoji). Catching these before even touching
+// "ok", "??", a single emoji). Catching these before even touching
 // getFaqResponse/the AI endpoint saves a wasted round trip and keeps the
 // free path snappy. Real one-word questions ("pricing?") are still long
 // enough to pass this and get a proper answer.
 const MIN_MESSAGE_LENGTH = 4;
 // Message is "just punctuation/emoji" if there's no letter or digit in it.
 const HAS_WORD_CHARACTER = /[\p{L}\p{N}]/u;
+// Short greetings ("hi", "hey", "yo") are real messages that deserve a real
+// greeting reply — they must NOT be caught by the length check above just
+// because they're under 4 characters. Without this, "hi" was falling into
+// the generic "try asking something like..." nudge instead of getting
+// Sol's actual greeting from the FAQ bot.
+const GREETING_WORDS = new Set(["hi", "hey", "yo", "hii", "heyy", "hiya", "hello", "sup", "hola"]);
 
 function isTrivialInput(message: string): boolean {
   const trimmed = message.trim();
-  if (trimmed.length < MIN_MESSAGE_LENGTH) return true;
   if (!HAS_WORD_CHARACTER.test(trimmed)) return true;
+  if (GREETING_WORDS.has(trimmed.toLowerCase())) return false;
+  if (trimmed.length < MIN_MESSAGE_LENGTH) return true;
   return false;
 }
 
