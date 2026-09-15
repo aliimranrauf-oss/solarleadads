@@ -92,6 +92,7 @@ export default function ChatWidget({
   const [leadName, setLeadName] = useState("");
   const [leadEmail, setLeadEmail] = useState("");
   const [leadCompany, setLeadCompany] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
   const [leadMessage, setLeadMessage] = useState("");
   const [leadError, setLeadError] = useState("");
 
@@ -194,6 +195,7 @@ export default function ChatWidget({
           name: leadName.trim(),
           email: leadEmail.trim(),
           company: leadCompany.trim(),
+          phone: leadPhone.trim(),
           message: leadMessage.trim(),
           source: "chat_bot",
         }),
@@ -221,6 +223,7 @@ export default function ChatWidget({
       setLeadName("");
       setLeadEmail("");
       setLeadCompany("");
+      setLeadPhone("");
       setLeadMessage("");
     } catch {
       setLeadStatus("error");
@@ -370,6 +373,13 @@ export default function ChatWidget({
                   placeholder="Company name"
                   value={leadCompany}
                   onChange={(e) => setLeadCompany(e.target.value)}
+                  className="w-full rounded-lg border border-navy/15 bg-white px-3 py-2 text-sm text-navy outline-none transition-colors focus:border-trust-500"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone number (optional)"
+                  value={leadPhone}
+                  onChange={(e) => setLeadPhone(e.target.value)}
                   className="w-full rounded-lg border border-navy/15 bg-white px-3 py-2 text-sm text-navy outline-none transition-colors focus:border-trust-500"
                 />
                 <textarea
