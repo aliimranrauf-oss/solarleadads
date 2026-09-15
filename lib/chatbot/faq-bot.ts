@@ -21,7 +21,18 @@ export type FaqBotReply = {
   matched: boolean;
 };
 
-type Entry = { keywords: string[]; response: string };
+type Entry = {
+  keywords: string[];
+  response: string;
+  /**
+   * If set, this entry only matches when the message is at most this many
+   * words. Stops short keywords like "hi" from hijacking a longer message
+   * that happens to start with a greeting — e.g. "hi i want an ai chatbot
+   * for my solar cleaning business" should answer the chatbot question, not
+   * reply with a canned "Hey! I can help with two things..." greeting.
+   */
+  maxWords?: number;
+};
 
 // Bare "pricing"/"cost"/"how much" etc is ambiguous between the two service
 // lines (Meta ads vs AI chatbot), so it's NOT a normal keyword entry in
@@ -160,9 +171,13 @@ function buildEntries(): { entries: Entry[]; adsPricingResponse: string; chatbot
 
   const adsPricingResponse = `Pricing depends on your region (USA, UK, or Australia) and which track fits your business:\n\nInstallation & Sales:\n${installationSummary}\n\nCleaning & Repair:\n${localSummary}\n\nAdd-ons:\n${addOnsSummary}\n\nFull numbers by region are on /services — or tell me your region and track and I'll point you to the right tier.`;
 
-  // Small talk.
+  // Small talk. Capped to short messages only (see Entry.maxWords) — a
+  // message that's ONLY a greeting ("hi", "hey there") gets the canned
+  // pitch, but "hi i want a chatbot for my solar cleaning business" is a
+  // real question and must not be swallowed by the word "hi".
   entries.push({
     keywords: ["hello", "hi", "hey", "good morning", "good afternoon"],
+    maxWords: 4,
     response:
       "Hey! I can help with two things: Meta ad campaigns that bring exclusive leads to your solar business, and custom AI chatbots we build for solar companies worldwide. Ask me about pricing, leads, regions, or the chatbot service — whatever's useful.",
   });
@@ -208,9 +223,11 @@ function hasChatbotContext(userMessage: string, history: FaqHistoryMessage[]): b
 
 export function getFaqResponse(userMessage: string, history: FaqHistoryMessage[] = []): FaqBotReply {
   const normalized = normalize(userMessage);
+  const wordCount = normalized.split(" ").filter(Boolean).length;
   const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => containsKeyword(normalized, k));
 
   for (const entry of ENTRIES) {
+    if (entry.maxWords !== undefined && wordCount > entry.maxWords) continue;
     if (entry.keywords.some((k) => containsKeyword(normalized, k))) {
       return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
     }
@@ -225,6 +242,24 @@ export function getFaqResponse(userMessage: string, history: FaqHistoryMessage[]
       suggestQuote: hasLeadIntent,
       matched: true,
     };
+  }
+
+  // Broad chatbot-intent catch: none of the specific chatbot entries above
+  // matched (those need fairly exact phrasing like "chatbot for my
+  // website"), but the message still clearly signals interest in the AI
+  // chatbot service in more natural phrasing ("ai chat bot for my solar
+  // cleaning business", "need a virtual assistant", etc). Answer on-topic
+  // instead of falling through to the generic two-service pitch.
+  //
+  // Only fires the FIRST time chatbot intent shows up in the conversation.
+  // If it was already established earlier (hasChatbotContext on history
+  // alone), repeating this same canned line would just loop instead of
+  // moving the conversation forward — better to escalate to the AI, which
+  // has the full history and can respond to what's actually being asked
+  // now (e.g. progressing to "what's your website?").
+  const chatbotAlreadyEstablished = hasChatbotContext("", history);
+  if (!chatbotAlreadyEstablished && CHATBOT_INTENT_KEYWORDS.some((k) => containsKeyword(normalized, k))) {
+    return { text: chatbotFaqs[0].a, suggestQuote: hasLeadIntent, matched: true };
   }
 
   // Fallback branches below: neither is a real topic match, so both are
