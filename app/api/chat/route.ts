@@ -223,7 +223,7 @@ ${faqText}
 FAQs — AI chatbot development service:
 ${chatbotFaqText}
 
-If the user expresses interest in starting a campaign, getting a lead audit, having an AI chatbot built, or hiring the team in any other way: do NOT ask them to type their name, email, company, or website into the chat. Instead, in one short sentence, let them know a quick form will appear below, or they can message ${siteConfig.whatsappDisplayNumber} on WhatsApp for a faster reply. End that exact reply with the marker [[COLLECT_CONTACT]] on its own line — this makes the quote-form and WhatsApp buttons appear in the widget. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
+If the user expresses interest in starting a campaign, getting a lead audit, having an AI chatbot built, or hiring the team in any other way: do NOT ask them to type their name, email, phone number, company, or website into the chat. Instead, in one short sentence, let them know a quick form will appear below, or they can message ${siteConfig.whatsappDisplayNumber} on WhatsApp for a faster reply. End that exact reply with the marker [[COLLECT_CONTACT]] on its own line — this makes the quote-form and WhatsApp buttons appear in the widget. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
 }
 
 const SYSTEM_PROMPT = buildSystemPrompt();
