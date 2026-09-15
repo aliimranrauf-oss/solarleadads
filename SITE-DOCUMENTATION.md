@@ -158,9 +158,32 @@ These go in a `.env.local` file locally, or in Vercel's Project Settings → Env
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Public key, safe for browser — used for read-only blog fetching |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Secret key, server-only — used to insert leads/reviews. **Never expose this in client code.** |
+| `AI_PROVIDER` | Optional | Which AI provider the chatbot calls: `groq` (default) or `grok`. See note below. |
+| `GROQ_API_KEY` | Yes, if `AI_PROVIDER=groq` | Groq API key (console.groq.com/keys). Starts with `gsk_`. |
+| `XAI_API_KEY` | Yes, if `AI_PROVIDER=grok` | xAI Grok API key (console.x.ai). Starts with `xai-`. |
+| `AI_MODEL` | Optional | Overrides the default model for the chosen provider |
 | `RESEND_API_KEY` | Optional | Enables email notifications when a new lead comes in |
 | `NOTIFY_EMAIL_TO` | Optional | Which inbox gets the new-lead notification email |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional | Enables Google Analytics 4 tracking |
+
+> **Groq vs Grok — these are two different companies.**
+> **Groq** (groq.com) is a fast inference provider with a generous free tier — this is
+> the default and what the site shipped with. **Grok** (x.ai) is Elon Musk's xAI model,
+> which is paid. Both use an OpenAI-compatible API, so `app/api/chat/route.ts` supports
+> either: set `AI_PROVIDER` and the matching key. If the chatbot ever replies
+> *"The AI assistant isn't configured yet"*, the key for your selected provider is missing.
+
+### The AI chatbot files
+
+| File | What it controls |
+|---|---|
+| `app/api/chat/route.ts` | Server route: provider selection, rate limits, caching, circuit breaker, system prompt assembly |
+| `lib/chatbot/persona.ts` | How the bot sounds, both service lines, always/never rules |
+| `lib/chatbot/knowledge.ts` | FAQ content — `faqs` (Meta ads) and `chatbotFaqs` (chatbot service) |
+| `lib/chatbot/faq-bot.ts` | Free keyword layer — answers common questions with **zero** API cost |
+| `components/SolarChatBot.tsx` | Hybrid routing: trivial input → keyword bot → AI |
+| `components/ChatWidget.tsx` | The UI shell (bubble, panel, lead form) |
+| `app/ai-chatbot/page.tsx` | Public marketing page for the chatbot service |
 
 ---
 
