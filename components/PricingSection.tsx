@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import DiscountBadge from "@/components/DiscountBadge";
 import {
   regions,
   tracks,
   tiersForTrack,
   addOns,
   formatCurrency,
+  tierDiscountPercent,
   type Region,
   type TrackId,
 } from "@/lib/pricing";
@@ -79,14 +81,24 @@ export default function PricingSection() {
                   </span>
                 )}
 
+                <DiscountBadge
+                  percent={tierDiscountPercent(tier, region)}
+                  className="absolute -top-3 right-4"
+                />
+
                 <p className="font-display text-lg font-semibold text-navy">{tier.name}</p>
                 <p className="mt-1.5 text-sm text-ink-400">{tier.tagline}</p>
 
                 <div className="mt-5">
-                  <span className="font-display text-3xl font-semibold text-navy">
-                    {formatCurrency(region, tier.fee[region])}
-                  </span>
-                  <span className="text-sm text-ink-400">/month</span>
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-sm text-ink-300 line-through">
+                      {formatCurrency(region, tier.originalFee[region])}
+                    </span>
+                    <span className="font-display text-3xl font-semibold text-navy">
+                      {formatCurrency(region, tier.fee[region])}
+                    </span>
+                    <span className="text-sm text-ink-400">/month</span>
+                  </div>
                   <p className="mt-1 text-xs text-ink-300">
                     Management fee — ad spend paid directly to Meta, separately
                   </p>
