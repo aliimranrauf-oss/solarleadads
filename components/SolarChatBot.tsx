@@ -39,7 +39,7 @@ export default function SolarChatBot() {
 
     // Step 1: try the free FAQ matcher first.
     await delay(200);
-    const faqReply = getFaqResponse(userMessage);
+    const faqReply = getFaqResponse(userMessage, history);
 
     if (faqReply.matched) {
       // Real topic match — answer instantly, no Groq call made.
