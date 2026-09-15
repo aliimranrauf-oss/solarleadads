@@ -4,7 +4,9 @@
 // and it never claims to be AI.
 
 import { addOns, tiersForTrack } from "@/lib/pricing";
-import { chatbotFaqs, faqs, LEAD_INTENT_KEYWORDS } from "./knowledge";
+import { chatbotFaqs, faqs, LEAD_INTENT_KEYWORDS, CHATBOT_INTENT_KEYWORDS } from "./knowledge";
+
+export type FaqHistoryMessage = { role: "user" | "assistant"; content: string };
 
 export type FaqBotReply = {
   text: string;
@@ -20,6 +22,12 @@ export type FaqBotReply = {
 };
 
 type Entry = { keywords: string[]; response: string };
+
+// Bare "pricing"/"cost"/"how much" etc is ambiguous between the two service
+// lines (Meta ads vs AI chatbot), so it's NOT a normal keyword entry in
+// ENTRIES — it's resolved separately in getFaqResponse() using conversation
+// context. See hasChatbotContext() below.
+const GENERIC_PRICING_KEYWORDS = ["price", "pricing", "cost", "how much", "fee", "fees", "rates"];
 
 function normalize(input: string): string {
   return input
@@ -49,7 +57,7 @@ function containsKeyword(haystack: string, keyword: string): boolean {
   return new RegExp(`\\b${escapeRegex(keyword)}`).test(haystack);
 }
 
-function buildEntries(): Entry[] {
+function buildEntries(): { entries: Entry[]; adsPricingResponse: string; chatbotPricingResponse: string } {
   const entries: Entry[] = [];
 
   // FAQs, reused verbatim from lib/chatbot/knowledge.ts.
@@ -136,6 +144,12 @@ function buildEntries(): Entry[] {
   // currency figures here, since those vary by region). Generated from
   // lib/pricing.ts so it can never drift from the real numbers on
   // /services — nothing to keep in sync by hand.
+  //
+  // NOTE: this is intentionally NOT added as a keyword entry in ENTRIES.
+  // A bare "pricing"/"cost"/"how much" is ambiguous between the two service
+  // lines, so it's handled specially in getFaqResponse() below, which checks
+  // conversation context (via CHATBOT_INTENT_KEYWORDS) before deciding
+  // whether to show ads pricing or chatbot pricing.
   const installationSummary = tiersForTrack("installation")
     .map((t) => `• ${t.name} — ${t.leadsEstimate}`)
     .join("\n");
@@ -144,10 +158,7 @@ function buildEntries(): Entry[] {
     .join("\n");
   const addOnsSummary = addOns.map((a) => `• ${a.name} (${a.price})`).join("\n");
 
-  entries.push({
-    keywords: ["price", "pricing", "cost", "how much", "fee", "fees", "rates"],
-    response: `Pricing depends on your region (USA, UK, or Australia) and which track fits your business:\n\nInstallation & Sales:\n${installationSummary}\n\nCleaning & Repair:\n${localSummary}\n\nAdd-ons:\n${addOnsSummary}\n\nFull numbers by region are on /services — or tell me your region and track and I'll point you to the right tier.`,
-  });
+  const adsPricingResponse = `Pricing depends on your region (USA, UK, or Australia) and which track fits your business:\n\nInstallation & Sales:\n${installationSummary}\n\nCleaning & Repair:\n${localSummary}\n\nAdd-ons:\n${addOnsSummary}\n\nFull numbers by region are on /services — or tell me your region and track and I'll point you to the right tier.`;
 
   // Small talk.
   entries.push({
@@ -178,12 +189,24 @@ function buildEntries(): Entry[] {
       "Here's how it works:\n\n1. You request a free lead audit (here, via the contact form, or WhatsApp) describing your business and goals.\n2. We review it and send a clear, personalized quote — no obligation.\n3. Once you confirm a package, we set up (or help set up) your Meta ad account and campaign — creative, landing page, and targeting.\n4. Your campaign goes live, usually within a few business days.\n5. Leads land in your WhatsApp/email the moment they come in, with regular reporting.\n\nWant to get started? Share a few details and we'll follow up.",
   });
 
-  return entries;
+  return { entries, adsPricingResponse, chatbotPricingResponse: chatbotFaqs[7].a };
 }
 
-const ENTRIES = buildEntries();
+const { entries: ENTRIES, adsPricingResponse: ADS_PRICING_RESPONSE, chatbotPricingResponse: CHATBOT_PRICING_RESPONSE } =
+  buildEntries();
 
-export function getFaqResponse(userMessage: string): FaqBotReply {
+/**
+ * Was the AI-chatbot service (rather than the Meta-ads service) the topic of
+ * this conversation? Checked across the whole thread, not just the latest
+ * message — a visitor who said "chat bot for my solar business" two turns
+ * ago and then just types "pricing" is still asking about the chatbot.
+ */
+function hasChatbotContext(userMessage: string, history: FaqHistoryMessage[]): boolean {
+  const combined = normalize([...history.map((m) => m.content), userMessage].join(" "));
+  return CHATBOT_INTENT_KEYWORDS.some((k) => containsKeyword(combined, k));
+}
+
+export function getFaqResponse(userMessage: string, history: FaqHistoryMessage[] = []): FaqBotReply {
   const normalized = normalize(userMessage);
   const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => containsKeyword(normalized, k));
 
@@ -191,6 +214,17 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
     if (entry.keywords.some((k) => containsKeyword(normalized, k))) {
       return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
     }
+  }
+
+  // Bare "pricing"/"cost"/"how much" etc: ambiguous on its own, so resolve
+  // it using conversation context instead of a fixed keyword entry.
+  if (GENERIC_PRICING_KEYWORDS.some((k) => containsKeyword(normalized, k))) {
+    const isChatbotTopic = hasChatbotContext(userMessage, history);
+    return {
+      text: isChatbotTopic ? CHATBOT_PRICING_RESPONSE : ADS_PRICING_RESPONSE,
+      suggestQuote: hasLeadIntent,
+      matched: true,
+    };
   }
 
   // Fallback branches below: neither is a real topic match, so both are
