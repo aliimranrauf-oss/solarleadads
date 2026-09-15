@@ -197,7 +197,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   // matched: false — hybrid mode escalates to the AI endpoint for both.
   if (hasLeadIntent) {
     return {
-      text: "Sounds like you're ready to get leads flowing. Want to leave a few details — name, email, and company — and we'll send a free lead audit?",
+      text: "Sounds like you're ready to get started. Use the quick form below, or message us on WhatsApp for a faster reply.",
       suggestQuote: true,
       matched: false,
     };
