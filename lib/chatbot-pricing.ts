@@ -3,6 +3,8 @@
 // not a recurring regional price. Update the numbers here and both the
 // /ai-chatbot page and this file's exported copy stay in sync.
 
+import { discountPercent as sharedDiscountPercent } from "./discount";
+
 export type ChatbotTier = {
   id: "basic" | "ai" | "pro";
   name: string;
@@ -68,10 +70,8 @@ export const chatbotTiers: ChatbotTier[] = [
   },
 ];
 
-/** Rounded discount percentage, e.g. 60 for "60% OFF". Computed from the two
- * prices so the badge never drifts out of sync if you update a price. */
 export function discountPercent(tier: ChatbotTier): number {
-  return Math.round((1 - tier.price / tier.originalPrice) * 100);
+  return sharedDiscountPercent(tier.price, tier.originalPrice);
 }
 
 export function formatUsd(amount: number): string {
