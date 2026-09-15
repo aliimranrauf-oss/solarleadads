@@ -8,8 +8,8 @@ export const runtime = "nodejs";
 // instead, since it's a plain <form>. The chat widget is a client
 // component that needs a fetch-able JSON endpoint, so it gets its own
 // route here — but both write into the exact same Supabase `leads` table
-// with the same columns, just with company/phone/etc. often left blank
-// since the chat widget only asks for name, email, and a short message.
+// with the same columns. Phone is optional here (the widget's quick form
+// asks for it but doesn't require it), unlike name/email/company/message.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_FIELD_LENGTH = 200;
@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
   const name = clean(body.name, MAX_FIELD_LENGTH);
   const email = clean(body.email, MAX_FIELD_LENGTH);
   const company = clean(body.company, MAX_FIELD_LENGTH);
+  const phone = clean(body.phone, MAX_FIELD_LENGTH);
   const message = clean(body.message, MAX_MESSAGE_LENGTH);
 
   const rawSource = clean(body.source, MAX_FIELD_LENGTH);
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
       name,
       email,
       company,
-      phone: null,
+      phone: phone || null,
       website_url: null,
       ad_spend_range: null,
       message,
