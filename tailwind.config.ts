@@ -73,12 +73,23 @@ const config: Config = {
           "0%, 100%": { transform: "translateX(-50%) scale(1)", opacity: "0.45" },
           "50%": { transform: "translateX(-50%) scale(0.7)", opacity: "0.2" },
         },
+        shine: {
+          "0%": { transform: "translateX(-150%)" },
+          "55%": { transform: "translateX(150%)" },
+          "100%": { transform: "translateX(150%)" },
+        },
+        badgePulse: {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(242, 169, 59, 0.55)" },
+          "50%": { boxShadow: "0 0 0 6px rgba(242, 169, 59, 0)" },
+        },
       },
       animation: {
         panelPulse: "panelPulse 3.2s ease-in-out infinite",
         floatSlow: "floatSlow 6s ease-in-out infinite",
         fadeInUp: "fadeInUp 0.6s ease-out both",
         shadowPulse: "shadowPulse 6s ease-in-out infinite",
+        shine: "shine 2.6s ease-in-out infinite",
+        badgePulse: "badgePulse 2.6s ease-in-out infinite",
       },
     },
   },
