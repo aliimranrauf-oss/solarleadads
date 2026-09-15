@@ -1,3 +1,5 @@
+import { discountPercent as sharedDiscountPercent } from "./discount";
+
 export type Region = "us" | "uk" | "au";
 
 export const regions: { id: Region; label: string; currency: string }[] = [
@@ -29,6 +31,9 @@ export type PricingTier = {
   tagline: string;
   /** Monthly management fee — what the client pays SolarLeadAds. */
   fee: Record<Region, number>;
+  /** Pre-discount monthly management fee — shown struck-through next to `fee`.
+   * Limited-time launch pricing, ~60% off across every tier. */
+  originalFee: Record<Region, number>;
   /** Minimum recommended ad spend — paid directly to Meta, not to us. */
   adSpendMin: Record<Region, number>;
   leadsEstimate: string;
@@ -43,6 +48,7 @@ export const pricingTiers: PricingTier[] = [
     name: "Starter",
     tagline: "For new or small solar businesses getting started with paid leads",
     fee: { us: 997, uk: 850, au: 1650 },
+    originalFee: { us: 2500, uk: 2125, au: 4125 },
     adSpendMin: { us: 1500, uk: 1250, au: 2400 },
     leadsEstimate: "25–40 exclusive leads/month",
     features: [
@@ -63,6 +69,7 @@ export const pricingTiers: PricingTier[] = [
     mostPopular: true,
     tagline: "For established businesses ready to scale lead volume",
     fee: { us: 1797, uk: 1500, au: 2950 },
+    originalFee: { us: 4500, uk: 3750, au: 7375 },
     adSpendMin: { us: 2500, uk: 2000, au: 4000 },
     leadsEstimate: "60–100 exclusive leads/month",
     features: [
@@ -82,6 +89,7 @@ export const pricingTiers: PricingTier[] = [
     name: "Scale",
     tagline: "For multi-location teams and panel/battery distributors",
     fee: { us: 2997, uk: 2500, au: 4950 },
+    originalFee: { us: 7500, uk: 6250, au: 12375 },
     adSpendMin: { us: 5000, uk: 4000, au: 8000 },
     leadsEstimate: "120+ exclusive leads/month",
     features: [
@@ -102,6 +110,7 @@ export const pricingTiers: PricingTier[] = [
     name: "Essentials",
     tagline: "For solar cleaning, repair & maintenance pros getting started with local leads",
     fee: { us: 497, uk: 425, au: 800 },
+    originalFee: { us: 1250, uk: 1050, au: 2000 },
     adSpendMin: { us: 800, uk: 650, au: 1300 },
     leadsEstimate: "30–50 local leads/month",
     features: [
@@ -120,6 +129,7 @@ export const pricingTiers: PricingTier[] = [
     mostPopular: true,
     tagline: "For local pros ready for more volume and repeat seasonal demand",
     fee: { us: 697, uk: 575, au: 1150 },
+    originalFee: { us: 1750, uk: 1450, au: 2875 },
     adSpendMin: { us: 1200, uk: 950, au: 1900 },
     leadsEstimate: "60–90 local leads/month",
     features: [
@@ -191,6 +201,10 @@ export function findTier(id?: string | null): PricingTier | undefined {
 
 export function tiersForTrack(trackId: TrackId): PricingTier[] {
   return pricingTiers.filter((t) => t.track === trackId);
+}
+
+export function tierDiscountPercent(tier: PricingTier, region: Region): number {
+  return sharedDiscountPercent(tier.fee[region], tier.originalFee[region]);
 }
 
 export function formatCurrency(region: Region, amount: number): string {
