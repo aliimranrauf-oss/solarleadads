@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FinalCTA from "@/components/FinalCTA";
+import ChatbotPricingSection from "@/components/ChatbotPricingSection";
 import { whatsappLink } from "@/lib/site-config";
 import { chatbotFaqs } from "@/lib/chatbot/knowledge";
 
@@ -388,40 +389,11 @@ export default function AiChatbotPage() {
       </section>
 
       {/* Pricing */}
-      <section className="section-pad pt-0">
-        <div className="container-max">
-          <Reveal className="rounded-2xl border border-navy/5 bg-white p-6 shadow-card sm:p-10">
-            <p className="eyebrow">Pricing</p>
-            <h2 className="mt-3 text-2xl font-semibold leading-snug sm:text-3xl">
-              Quoted per project, because scope varies enormously.
-            </h2>
-            <p className="mt-4 max-w-3xl text-base text-ink-400">
-              A focused FAQ assistant and a full lead-qualifying bot with CRM integration,
-              multilingual support, and a product catalogue are very different builds — so we
-              don&apos;t pretend one price fits both. Send us your website and a short description of
-              what you want the assistant to handle, and you&apos;ll get a fixed quote with no
-              obligation.
-            </p>
-            <p className="mt-4 max-w-3xl text-sm text-ink-400">
-              Ongoing support — knowledge-base updates, answer tuning based on real conversations,
-              and model upkeep — is optional and quoted separately. You can also take full ownership
-              and run it in-house.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/contact" className="btn-primary">
-                Request a quote
-              </Link>
-              <Link href="/services" className="btn-secondary">
-                See our Meta ads packages
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <ChatbotPricingSection />
 
       {/* FAQ — shares its source with the on-site assistant (lib/chatbot/knowledge.ts)
           so this page and the bot can never contradict each other. */}
-      <section className="section-pad pt-0">
+      <section id="chatbot-faq" className="section-pad pt-0">
         <div className="container-max max-w-3xl">
           <Reveal className="text-center">
             <p className="eyebrow mx-auto">Chatbot FAQ</p>
