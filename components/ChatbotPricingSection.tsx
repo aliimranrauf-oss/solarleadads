@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import DiscountBadge from "@/components/DiscountBadge";
 import { chatbotTiers, discountPercent, formatUsd } from "@/lib/chatbot-pricing";
 
 export default function ChatbotPricingSection() {
@@ -35,9 +36,7 @@ export default function ChatbotPricingSection() {
                   </span>
                 )}
 
-                <span className="absolute -top-3 right-4 rounded-full bg-leaf-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-soft">
-                  {discountPercent(tier)}% off
-                </span>
+                <DiscountBadge percent={discountPercent(tier)} className="absolute -top-3 right-4" />
 
                 <p className="font-display text-lg font-semibold text-navy">{tier.name}</p>
                 <p className="mt-1.5 text-sm text-ink-400">{tier.tagline}</p>
