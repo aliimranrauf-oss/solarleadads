@@ -7,6 +7,7 @@ const linkCols = [
     links: [
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
+      { label: "AI Chatbot", href: "/ai-chatbot" },
       { label: "Results", href: "/results" },
       { label: "Process", href: "/process" },
       { label: "About", href: "/about" },
