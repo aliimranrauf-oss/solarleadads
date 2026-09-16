@@ -20,9 +20,14 @@ export const metadata: Metadata = {
   // Title leads with the exact phrase buyers search ("AI chatbot for
   // <industry>") and carries the price signal, which lifts click-through
   // even when the ranking position doesn't move.
-  title: "AI Chatbot for Solar Businesses | Custom Build from $179",
+  //
+  // Price fixed to $299: that's the "AI-Powered Bot" tier (chatbotTiers id
+  // "ai"). The $179 tier is the "Basic FAQ Bot" — scripted, no AI model at
+  // all (see lib/chatbot-pricing.ts) — so it can't be the price attached to
+  // a page titled "AI Chatbot".
+  title: "AI Chatbot for Solar Businesses | Custom Build from $299",
   description:
-    "Custom AI chatbots for solar installers, sellers, wholesale suppliers, battery providers, maintenance and cleaning companies. Trained on your own services and pricing, live on your site 24/7. One-time build from $179 — no monthly fee.",
+    "Custom AI-powered chatbots for solar installers, sellers, wholesale suppliers, battery providers, maintenance and cleaning companies. Trained on your own services and pricing, live on your site 24/7. One-time build from $299 — no monthly fee. (A simpler, scripted non-AI FAQ bot is also available from $179.)",
   keywords: [
     "AI chatbot for solar business",
     "solar website chatbot",
@@ -33,7 +38,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/ai-chatbot" },
   openGraph: {
-    title: "AI Chatbots Built for Solar Businesses | From $179 One-Time",
+    title: "AI Chatbots Built for Solar Businesses | From $299 One-Time",
     description:
       "Custom AI chat assistants for solar companies anywhere in the world — trained on your services, pricing, and tone of voice. Qualifies visitors and captures leads 24/7.",
     url: "https://solarleadads.com/ai-chatbot",
@@ -68,6 +73,15 @@ const capabilities = [
 // timeline (knowledge base, persona/guardrails, tuning) still happens — it's
 // just not something a first-time visitor needs to read before they'll ask
 // for a quote.
+// The hero headline says "AI chatbot" and must quote an AI-model tier's
+// price. chatbotTiers[0] ("Basic FAQ Bot") is scripted with no AI model at
+// all — using its $179 price here would be an inaccurate claim. This finds
+// the "ai" tier ($299) instead, and falls back to the first tier only if the
+// "ai" id is ever renamed/removed, so the page never crashes.
+const heroTier =
+  chatbotTiers.find((t) => t.id === "ai") ?? chatbotTiers[0];
+const basicTier = chatbotTiers.find((t) => t.id === "basic");
+
 const steps = [
   {
     n: "1",
@@ -85,6 +99,9 @@ const steps = [
     desc: "Answering visitors and sending you qualified leads — with usage caps in place so there are no surprise bills.",
   },
 ];
+
+// Tiers that actually run an AI model — excludes "basic" (scripted, no AI).
+const aiModelTiers = chatbotTiers.filter((t) => t.id !== "basic");
 
 export default function AiChatbotPage() {
   const jsonLd = jsonLdGraph([
@@ -118,6 +135,11 @@ export default function AiChatbotPage() {
     {
       // Marks the page up as a software product too, which is a second,
       // separate rich-result path for "AI chatbot" style queries.
+      //
+      // Price range is scoped to AI-model tiers only ("ai" + "pro"). The
+      // "basic" tier has no AI model in it at all, so including its $179 in
+      // a "Solar AI Chatbot" product's price range would be an inaccurate
+      // claim to Google, same issue as the headline above.
       "@type": "Product",
       name: "Solar AI Chatbot",
       description:
@@ -126,9 +148,9 @@ export default function AiChatbotPage() {
       offers: {
         "@type": "AggregateOffer",
         priceCurrency: "USD",
-        lowPrice: Math.min(...chatbotTiers.map((t) => t.price)),
-        highPrice: Math.max(...chatbotTiers.map((t) => t.price)),
-        offerCount: chatbotTiers.length,
+        lowPrice: Math.min(...aiModelTiers.map((t) => t.price)),
+        highPrice: Math.max(...aiModelTiers.map((t) => t.price)),
+        offerCount: aiModelTiers.length,
         availability: "https://schema.org/InStock",
       },
     },
@@ -160,7 +182,7 @@ export default function AiChatbotPage() {
             <p className="eyebrow mb-5">AI chatbot development</p>
             <h1 className="text-4xl font-semibold leading-[1.1] sm:text-5xl">
               An AI chatbot for your solar business — from{" "}
-              <span className="text-leaf-600">${chatbotTiers[0].price}</span>.
+              <span className="text-leaf-600">${heroTier.price}</span>.
             </h1>
             <p className="mt-6 max-w-lg text-base text-ink-400 sm:text-lg">
               Answers customer questions and captures leads on your site, 24/7 — trained on your
@@ -198,6 +220,12 @@ export default function AiChatbotPage() {
               Curious what one feels like? The assistant in the bottom-right corner of this site is
               one of ours — ask it something.
             </p>
+            {basicTier && (
+              <p className="mt-2 text-sm text-ink-400">
+                Just need simple scripted replies, no AI model? A {basicTier.name} starts at $
+                {basicTier.price}.
+              </p>
+            )}
           </div>
 
           <div className="flex justify-center lg:justify-end">
