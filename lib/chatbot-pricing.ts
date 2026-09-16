@@ -24,8 +24,8 @@ export const chatbotTiers: ChatbotTier[] = [
     id: "basic",
     name: "Basic FAQ Bot",
     tagline: "Scripted replies, no AI. Good for straightforward, repeatable questions.",
-    originalPrice: 249,
-    price: 99,
+    originalPrice: 449,
+    price: 179,
     priceQualifier: "flat",
     features: [
       "Rule-based Q&A flow — no AI model, so zero ongoing running cost",
@@ -40,8 +40,8 @@ export const chatbotTiers: ChatbotTier[] = [
     name: "AI-Powered Bot",
     mostPopular: true,
     tagline: "GPT, Claude, or Grok — trained on your own business data.",
-    originalPrice: 375,
-    price: 150,
+    originalPrice: 749,
+    price: 299,
     priceQualifier: "from",
     features: [
       "Real memory + RAG grounded in your services, pricing & FAQs",
@@ -56,8 +56,8 @@ export const chatbotTiers: ChatbotTier[] = [
     id: "pro",
     name: "Pro Multi-Channel Bot",
     tagline: "Everything in AI-Powered, built out across every channel your leads use.",
-    originalPrice: 625,
-    price: 250,
+    originalPrice: 1249,
+    price: 499,
     priceQualifier: "from",
     features: [
       "Everything in AI-Powered, plus:",
