@@ -109,8 +109,8 @@ export const pricingTiers: PricingTier[] = [
     track: "local",
     name: "Essentials",
     tagline: "For solar cleaning, repair & maintenance pros getting started with local leads",
-    fee: { us: 497, uk: 425, au: 800 },
-    originalFee: { us: 1250, uk: 1050, au: 2000 },
+    fee: { us: 597, uk: 500, au: 950 },
+    originalFee: { us: 1495, uk: 1250, au: 2375 },
     adSpendMin: { us: 800, uk: 650, au: 1300 },
     leadsEstimate: "30–50 local leads/month",
     features: [
