@@ -104,7 +104,7 @@ export const chatbotFaqs: KnowledgeFaq[] = [
   },
   {
     q: "How much does an AI chatbot cost?",
-    a: "It's a one-time setup fee, not a subscription. Right now, launch pricing (60% off) starts at $99 for a rule-based FAQ bot, $150 for a full AI-powered bot trained on your business data, and $250 for a multi-channel bot with CRM integration. WhatsApp/Telegram adds $50 if not already included. Share your website and what you want the bot to handle, and we'll send a fixed quote — no obligation.",
+    a: "It's a one-time setup fee, not a subscription. Right now, launch pricing (60% off) starts at $179 for a rule-based FAQ bot, $299 for a full AI-powered bot trained on your business data, and $499 for a multi-channel bot with CRM integration. WhatsApp/Telegram adds $50 if not already included. Share your website and what you want the bot to handle, and we'll send a fixed quote — no obligation.",
   },
   {
     q: "Do you maintain the chatbot after it goes live?",
