@@ -325,27 +325,47 @@ export async function POST(req: NextRequest) {
   ];
 
   try {
-    const aiRes = await fetch(provider.url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: provider.model,
-        messages: providerMessages,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        // 0.4 was producing stiff, same-shaped sentences turn after turn.
-        // 0.6 keeps facts (which come from the grounded data below, not the
-        // model's imagination) reliable while giving phrasing enough room
-        // to vary and sound like a person typing, not a template.
-        temperature: 0.6,
-      }),
-    });
+    // One retry for transient failures (Groq free-tier rate limits and
+    // brief outages both return 429/5xx and are usually gone a second
+    // later). A hard failure like a bad API key (401) or bad request
+    // (400) won't succeed on retry, so those return immediately instead
+    // of wasting the retry and adding delay for no reason.
+    const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
+    let aiRes: Response | null = null;
+    let lastErrText = "";
 
-    if (!aiRes.ok) {
-      const errText = await aiRes.text().catch(() => "");
-      console.error(`${provider.label} API error:`, aiRes.status, errText);
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      aiRes = await fetch(provider.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: provider.model,
+          messages: providerMessages,
+          max_tokens: MAX_OUTPUT_TOKENS,
+          // 0.4 was producing stiff, same-shaped sentences turn after turn.
+          // 0.6 keeps facts (which come from the grounded data below, not the
+          // model's imagination) reliable while giving phrasing enough room
+          // to vary and sound like a person typing, not a template.
+          temperature: 0.6,
+        }),
+      });
+
+      if (aiRes.ok) break;
+
+      lastErrText = await aiRes.text().catch(() => "");
+      console.error(`${provider.label} API error (attempt ${attempt}):`, aiRes.status, lastErrText);
+
+      if (attempt === 1 && RETRYABLE_STATUSES.has(aiRes.status)) {
+        await new Promise((r) => setTimeout(r, 400)); // brief backoff, then retry once
+        continue;
+      }
+      break;
+    }
+
+    if (!aiRes || !aiRes.ok) {
       recordProviderFailure();
       return NextResponse.json(
         { reply: "Something went wrong — try again, or use the contact form." },
