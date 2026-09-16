@@ -3,13 +3,42 @@ import Link from "next/link";
 import TrustBar from "@/components/TrustBar";
 import FinalCTA from "@/components/FinalCTA";
 import { siteConfig, whatsappLink } from "@/lib/site-config";
+import { jsonLdGraph, breadcrumbSchema, regionServiceSchema, organizationSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Solar Lead Generation Agency — USA",
+  title: "Solar Lead Generation USA | Exclusive Solar Leads for US Installers",
   description:
-    "Meta ad campaigns generating exclusive, high-intent solar leads for US installers, sellers, and technicians. No long-term contracts, TCPA-aware lead capture.",
+    "Meta ad campaigns generating exclusive, high-intent solar leads for US installers, sellers, technicians and cleaning teams across all 50 states. TCPA-aware lead capture, no long-term contracts.",
+  keywords: ["solar leads USA","solar lead generation company USA","exclusive solar leads United States","Facebook ads for solar installers USA","buy solar leads US"],
   alternates: { canonical: "/usa" },
+  openGraph: {
+    title: "Solar Lead Generation USA | Exclusive Solar Leads for US Installers",
+    description:
+      "Meta ad campaigns generating exclusive, high-intent solar leads for US installers, sellers, technicians and cleaning teams across all 50 states. TCPA-aware lead capture, no long-term contracts.",
+    url: "https://solarleadads.com/usa",
+    type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Solar lead generation in the USA" }],
+  },
 };
+
+// Country-scoped Service schema. Without this, /usa, /uk and /australia all
+// look like near-duplicates of /services to Google and compete with each
+// other. areaServed is what separates them.
+const jsonLd = jsonLdGraph([
+  organizationSchema,
+  breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "USA", path: "/usa" },
+  ]),
+  regionServiceSchema({
+    path: "/usa",
+    name: "Solar Lead Generation — USA",
+    description:
+      "Meta ad campaigns generating exclusive, high-intent solar leads for US installers, sellers, technicians and cleaning teams across all 50 states. TCPA-aware lead capture, no long-term contracts.",
+    countryName: "United States",
+    countryCode: "US",
+  }),
+]);
 
 const points = [
   "Campaigns targeted to US solar buyers, state by state",
@@ -21,6 +50,12 @@ const points = [
 export default function USALandingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="section-pad pt-10 sm:pt-14">
         <div className="container-max max-w-3xl">
           <p className="eyebrow mb-5">Solar lead generation — usa</p>
