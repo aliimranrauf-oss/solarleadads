@@ -3,13 +3,42 @@ import Link from "next/link";
 import TrustBar from "@/components/TrustBar";
 import FinalCTA from "@/components/FinalCTA";
 import { siteConfig, whatsappLink } from "@/lib/site-config";
+import { jsonLdGraph, breadcrumbSchema, regionServiceSchema, organizationSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Solar Lead Generation Agency — UK",
+  title: "Solar Lead Generation UK | Exclusive Solar Leads for UK Installers",
   description:
-    "Meta ad campaigns generating exclusive, high-intent solar leads for UK installers, sellers, and technicians. No long-term contracts, PECR & UK GDPR-aware lead capture.",
+    "Meta ad campaigns generating exclusive, high-intent solar leads for UK installers, sellers, technicians and cleaning teams. UK GDPR & PECR-aware lead capture, no long-term contracts.",
+  keywords: ["solar leads UK","solar lead generation UK","exclusive solar PV leads","Facebook ads for solar installers UK","solar panel installer leads UK"],
   alternates: { canonical: "/uk" },
+  openGraph: {
+    title: "Solar Lead Generation UK | Exclusive Solar Leads for UK Installers",
+    description:
+      "Meta ad campaigns generating exclusive, high-intent solar leads for UK installers, sellers, technicians and cleaning teams. UK GDPR & PECR-aware lead capture, no long-term contracts.",
+    url: "https://solarleadads.com/uk",
+    type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Solar lead generation in the UK" }],
+  },
 };
+
+// Country-scoped Service schema. Without this, /usa, /uk and /australia all
+// look like near-duplicates of /services to Google and compete with each
+// other. areaServed is what separates them.
+const jsonLd = jsonLdGraph([
+  organizationSchema,
+  breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "UK", path: "/uk" },
+  ]),
+  regionServiceSchema({
+    path: "/uk",
+    name: "Solar Lead Generation — UK",
+    description:
+      "Meta ad campaigns generating exclusive, high-intent solar leads for UK installers, sellers, technicians and cleaning teams. UK GDPR & PECR-aware lead capture, no long-term contracts.",
+    countryName: "United Kingdom",
+    countryCode: "GB",
+  }),
+]);
 
 const points = [
   "Campaigns targeted to UK solar buyers and local search behavior",
@@ -21,6 +50,12 @@ const points = [
 export default function UKLandingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="section-pad pt-10 sm:pt-14">
         <div className="container-max max-w-3xl">
           <p className="eyebrow mb-5">Solar lead generation — uk</p>
