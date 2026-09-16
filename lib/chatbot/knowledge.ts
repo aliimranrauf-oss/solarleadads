@@ -126,7 +126,11 @@ export const CHATBOT_INTENT_KEYWORDS = [
   "ai assistant",
   "ai agent",
   "virtual assistant",
-  "live chat",
+  // "live chat" was removed — it was matching generic questions like "do you
+  // have live chat support" or "is this live chat" (asking whether they're
+  // talking to a human right now), which then got the "yes we build AI
+  // chatbots" pitch. That's a wrong-context canned answer, which is exactly
+  // the "amateur bot" feeling this keyword list should avoid causing.
 ];
 
 // Small talk / lead-intent detection reused by the keyword FAQ bot.
