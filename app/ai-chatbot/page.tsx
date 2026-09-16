@@ -5,18 +5,39 @@ import FinalCTA from "@/components/FinalCTA";
 import ChatbotPricingSection from "@/components/ChatbotPricingSection";
 import { whatsappLink } from "@/lib/site-config";
 import { chatbotFaqs } from "@/lib/chatbot/knowledge";
+import {
+  jsonLdGraph,
+  breadcrumbSchema,
+  chatbotOfferCatalog,
+  organizationSchema,
+  ORG_ID,
+  absoluteUrl,
+} from "@/lib/seo";
+import { chatbotTiers } from "@/lib/chatbot-pricing";
 
 export const metadata: Metadata = {
-  title: "AI Chatbots for Solar Businesses",
+  // Title leads with the exact phrase buyers search ("AI chatbot for
+  // <industry>") and carries the price signal, which lifts click-through
+  // even when the ranking position doesn't move.
+  title: "AI Chatbot for Solar Businesses | Custom Build from $179",
   description:
-    "We design and build custom AI chat assistants for solar businesses worldwide — installers, sellers, wholesale suppliers, lithium battery providers, maintenance teams, and cleaning companies. Trained on your business, live 24/7.",
+    "Custom AI chatbots for solar installers, sellers, wholesale suppliers, battery providers, maintenance and cleaning companies. Trained on your own services and pricing, live on your site 24/7. One-time build from $179 — no monthly fee.",
+  keywords: [
+    "AI chatbot for solar business",
+    "solar website chatbot",
+    "custom AI chatbot development",
+    "chatbot for solar installers",
+    "WhatsApp chatbot solar company",
+    "lead capture chatbot",
+  ],
   alternates: { canonical: "/ai-chatbot" },
   openGraph: {
-    title: "AI Chatbots Built for Solar Businesses | SolarLeadAds",
+    title: "AI Chatbots Built for Solar Businesses | From $179 One-Time",
     description:
       "Custom AI chat assistants for solar companies anywhere in the world — trained on your services, pricing, and tone of voice. Qualifies visitors and captures leads 24/7.",
     url: "https://solarleadads.com/ai-chatbot",
     type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "AI chatbots for solar businesses" }],
   },
 };
 
@@ -139,33 +160,60 @@ const hybridLayers = [
 ];
 
 export default function AiChatbotPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Service",
-        name: "AI Chatbot Development for Solar Businesses",
-        serviceType: "AI chatbot development",
-        provider: {
-          "@type": "Organization",
-          name: "SolarLeadAds",
-          url: "https://solarleadads.com",
-        },
-        areaServed: "Worldwide",
-        description:
-          "Custom AI chat assistants designed, built, and deployed for solar businesses worldwide — installers, sellers, wholesale suppliers, lithium battery providers, maintenance teams, and solar cleaning companies.",
-        url: "https://solarleadads.com/ai-chatbot",
+  const jsonLd = jsonLdGraph([
+    organizationSchema,
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Services", path: "/services" },
+      { name: "AI Chatbots", path: "/ai-chatbot" },
+    ]),
+    {
+      "@type": "Service",
+      "@id": `${absoluteUrl("/ai-chatbot")}#service`,
+      name: "AI Chatbot Development for Solar Businesses",
+      serviceType: "AI chatbot development",
+      provider: { "@id": ORG_ID },
+      areaServed: "Worldwide",
+      description:
+        "Custom AI chat assistants designed, built, and deployed for solar businesses worldwide — installers, sellers, wholesale suppliers, lithium battery providers, maintenance teams, and solar cleaning companies.",
+      url: absoluteUrl("/ai-chatbot"),
+      // Real prices, pulled from lib/chatbot-pricing.ts. This is what makes
+      // the page eligible to show a "from $179" price directly in Google.
+      hasOfferCatalog: chatbotOfferCatalog(),
+      offers: chatbotTiers.map((tier) => ({
+        "@type": "Offer",
+        name: tier.name,
+        price: tier.price,
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+      })),
+    },
+    {
+      // Marks the page up as a software product too, which is a second,
+      // separate rich-result path for "AI chatbot" style queries.
+      "@type": "Product",
+      name: "Solar AI Chatbot",
+      description:
+        "A custom AI chat assistant trained on your solar business — services, pricing, service areas, and FAQs — installed on your website and messaging channels.",
+      brand: { "@id": ORG_ID },
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "USD",
+        lowPrice: Math.min(...chatbotTiers.map((t) => t.price)),
+        highPrice: Math.max(...chatbotTiers.map((t) => t.price)),
+        offerCount: chatbotTiers.length,
+        availability: "https://schema.org/InStock",
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: chatbotFaqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.q,
-          acceptedAnswer: { "@type": "Answer", text: faq.a },
-        })),
-      },
-    ],
-  };
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: chatbotFaqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+  ]);
 
   return (
     <>
