@@ -5,17 +5,81 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FinalCTA from "@/components/FinalCTA";
 import Reveal from "@/components/Reveal";
 import { whatsappLink } from "@/lib/site-config";
+import {
+  jsonLdGraph,
+  breadcrumbSchema,
+  organizationSchema,
+  metaAdsOfferCatalog,
+  ORG_ID,
+  absoluteUrl,
+} from "@/lib/seo";
+import { pricingTiers } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Services & Pricing",
+  title: "Solar Lead Generation Pricing | Meta Ads Packages from $597/mo",
   description:
-    "Meta ads packages for solar installers, sellers, technicians, and panel & battery providers — exclusive leads, transparent pricing, no long-term contracts.",
+    "Transparent Meta ads pricing for solar installers, sellers, technicians, and cleaning teams. Exclusive leads from $597/month, month-to-month, unqualified leads replaced free. USA, UK & Australia pricing shown.",
+  keywords: [
+    "solar lead generation pricing",
+    "solar ads agency cost",
+    "Meta ads management for solar",
+    "exclusive solar leads",
+    "solar panel cleaning leads",
+  ],
   alternates: { canonical: "/services" },
+  openGraph: {
+    title: "Solar Lead Generation Pricing | Meta Ads Packages",
+    description:
+      "Exclusive solar leads from $597/month. Transparent tiers for installers, sellers, technicians and cleaning teams across the USA, UK and Australia.",
+    url: "https://solarleadads.com/services",
+    type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Solar lead generation pricing" }],
+  },
 };
+
+// Priced Service schema — this is what makes the pricing tiers eligible to
+// surface with a price in Google, rather than as a plain blue link.
+const jsonLd = jsonLdGraph([
+  organizationSchema,
+  breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Services & Pricing", path: "/services" },
+  ]),
+  {
+    "@type": "Service",
+    "@id": `${absoluteUrl("/services")}#service`,
+    name: "Meta Ads Lead Generation for Solar Businesses",
+    serviceType: "Solar lead generation",
+    provider: { "@id": ORG_ID },
+    url: absoluteUrl("/services"),
+    areaServed: [
+      { "@type": "Country", name: "United States" },
+      { "@type": "Country", name: "United Kingdom" },
+      { "@type": "Country", name: "Australia" },
+    ],
+    description:
+      "Exclusive, high-intent solar leads generated through Facebook and Instagram ad campaigns — campaign setup, creative testing, lead filtering and delivery included.",
+    hasOfferCatalog: metaAdsOfferCatalog(),
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "USD",
+      lowPrice: Math.min(...pricingTiers.map((t) => t.fee.us)),
+      highPrice: Math.max(...pricingTiers.map((t) => t.fee.us)),
+      offerCount: pricingTiers.length,
+      availability: "https://schema.org/InStock",
+    },
+  },
+]);
 
 export default function ServicesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="section-pad pb-8 pt-10 text-center sm:pt-14">
         <div className="container-max mx-auto max-w-2xl">
           <Reveal>
