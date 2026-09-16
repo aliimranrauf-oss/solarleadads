@@ -233,7 +233,7 @@ export default function AiChatbotPage() {
               <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-trust-100 via-leaf-50 to-amber-100 blur-2xl opacity-70" />
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl shadow-soft">
                 <Image
-                  src="/chatbot-icon.jpg"
+                  src="/chatbot-hero.jpg"
                   alt="AI chatbot assistant widget for a solar business website"
                   fill
                   priority
