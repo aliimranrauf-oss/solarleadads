@@ -29,9 +29,22 @@ type Entry = {
    * words. Stops short keywords like "hi" from hijacking a longer message
    * that happens to start with a greeting — e.g. "hi i want an ai chatbot
    * for my solar cleaning business" should answer the chatbot question, not
-   * reply with a canned "Hey! I can help with two things..." greeting.
+   * reply with a canned greeting.
    */
   maxWords?: number;
+  /**
+   * Set on Meta-ads FAQ entries whose keywords are generic enough to also
+   * appear naturally in a chatbot-service question (contract terms, payment,
+   * access/permissions, timelines). Without this, "is the chatbot a
+   * long-term contract?" or "how do I pay for the chatbot?" would match the
+   * ads-specific answer first — which isn't just off-topic, it's factually
+   * wrong (e.g. the chatbot is a one-time fee, not the ads service's
+   * monthly billing). When this is true and the conversation already has
+   * chatbot-service context, the entry is skipped so the message falls
+   * through instead — to a chatbot-specific entry if one matches, otherwise
+   * to the AI, which has both service lines' facts and won't mix them up.
+   */
+  skipIfChatbotContext?: boolean;
 };
 
 // Bare "pricing"/"cost"/"how much" etc is ambiguous between the two service
@@ -82,6 +95,18 @@ function escapeRegex(input: string): string {
 }
 
 /**
+ * Picks randomly among a set of equivalent phrasings of the same answer.
+ * The two highest-frequency canned entries (a bare "hi" and "how does this
+ * work") were returning byte-identical text to every visitor, which is what
+ * reads as a scripted/amateur bot even though the underlying facts were
+ * fine. Wording varies here; the facts themselves are unchanged and stay
+ * grounded in lib/pricing.ts and lib/chatbot/knowledge.ts as before.
+ */
+function pickVariant(variants: string[]): string {
+  return variants[Math.floor(Math.random() * variants.length)];
+}
+
+/**
  * True when `keyword` appears in `haystack` starting at a word boundary.
  *
  * A plain `.includes()` here caused false positives on short keywords: the
@@ -102,18 +127,18 @@ function buildEntries(): { entries: Entry[]; adsPricingResponse: string; chatbot
 
   // FAQs, reused verbatim from lib/chatbot/knowledge.ts.
   entries.push(
-    { keywords: ["exclusive", "resell", "resold", "shared with other"], response: faqs[0].a },
+    { keywords: ["exclusive", "resell", "resold", "shared with other"], response: faqs[0].a, skipIfChatbotContext: true },
     { keywords: ["only work with installers", "only installers", "what businesses", "what kind of solar"], response: faqs[1].a },
-    { keywords: ["long term contract", "long-term contract", "locked in", "contract length"], response: faqs[2].a },
+    { keywords: ["long term contract", "long-term contract", "locked in", "contract length"], response: faqs[2].a, skipIfChatbotContext: true },
     { keywords: ["how do i receive", "how do i get leads", "receive leads", "receive new leads"], response: faqs[3].a },
-    { keywords: ["low quality", "bad lead", "unqualified", "lead quality"], response: faqs[4].a },
+    { keywords: ["low quality", "bad lead", "unqualified", "lead quality"], response: faqs[4].a, skipIfChatbotContext: true },
     { keywords: ["affect my posts", "existing content", "organic posts"], response: faqs[5].a },
-    { keywords: ["is it safe", "meta access safe", "facebook access safe", "safe to give access"], response: faqs[6].a },
+    { keywords: ["is it safe", "meta access safe", "facebook access safe", "safe to give access"], response: faqs[6].a, skipIfChatbotContext: true },
     { keywords: ["don't have a facebook", "dont have a facebook", "no facebook page", "haven't created", "havent created"], response: faqs[7].a },
-    { keywords: ["admin access", "whole facebook page", "full access", "just the ad account"], response: faqs[8].a },
-    { keywords: ["remove your access", "revoke access", "take back access"], response: faqs[9].a },
-    { keywords: ["how soon", "how fast can i start", "when can i launch", "go live"], response: faqs[11].a },
-    { keywords: ["how do i pay", "how and when do i pay", "payoneer", "payment link"], response: faqs[12].a }
+    { keywords: ["admin access", "whole facebook page", "full access", "just the ad account"], response: faqs[8].a, skipIfChatbotContext: true },
+    { keywords: ["remove your access", "revoke access", "take back access"], response: faqs[9].a, skipIfChatbotContext: true },
+    { keywords: ["how soon", "how fast can i start", "when can i launch", "go live"], response: faqs[11].a, skipIfChatbotContext: true },
+    { keywords: ["how do i pay", "how and when do i pay", "payoneer", "payment link"], response: faqs[12].a, skipIfChatbotContext: true }
   );
 
   // --- AI CHATBOT SERVICE ---
@@ -204,11 +229,26 @@ function buildEntries(): { entries: Entry[]; adsPricingResponse: string; chatbot
   // message that's ONLY a greeting ("hi", "hey there") gets the canned
   // pitch, but "hi i want a chatbot for my solar cleaning business" is a
   // real question and must not be swallowed by the word "hi".
+  // Small talk. Capped to short messages only (see Entry.maxWords) — a
+  // message that's ONLY a greeting ("hi", "hey there") gets a short,
+  // open question, but "hi i want a chatbot for my solar cleaning
+  // business" is a real question and must not be swallowed by the word
+  // "hi".
+  //
+  // Deliberately NOT a service pitch. The widget's own opening greeting
+  // (see SolarChatBot.tsx's `greeting` prop) already explains what Sol
+  // does the moment the chat panel opens — a visitor who then types "hi"
+  // has already seen that and is just saying hello back. Answering with
+  // another full "we do two things..." rundown reads as a bot that isn't
+  // listening; a person would just ask what they need.
   entries.push({
     keywords: ["hello", "hi", "hey", "good morning", "good afternoon"],
     maxWords: 4,
-    response:
-      "Hey! I can help with two things: Meta ad campaigns that bring exclusive leads to your solar business, and custom AI chatbots we build for solar companies worldwide. Ask me about pricing, leads, regions, or the chatbot service — whatever's useful.",
+    response: pickVariant([
+      "Hey! What can I help you with?",
+      "Hi there! What can I help you with today?",
+      "Hey, what's up — what can I help with?",
+    ]),
   });
 
   // "What's the process?" — common follow-up, grounded rather than
@@ -229,8 +269,10 @@ function buildEntries(): { entries: Entry[]; adsPricingResponse: string; chatbot
       "how do i start",
       "getting started",
     ],
-    response:
+    response: pickVariant([
       "Here's how it works:\n\n1. You request a free lead audit (here, via the contact form, or WhatsApp) describing your business and goals.\n2. We review it and send a clear, personalized quote — no obligation.\n3. Once you confirm a package, we set up (or help set up) your Meta ad account and campaign — creative, landing page, and targeting.\n4. Your campaign goes live, usually within a few business days.\n5. Leads land in your WhatsApp/email the moment they come in, with regular reporting.\n\nWant to get started? Share a few details and we'll follow up.",
+      "Pretty simple on your end:\n\n- Request a free lead audit (here, contact form, or WhatsApp) with your business and goals.\n- We send back a clear quote — no obligation.\n- Once you confirm, we set up your Meta ad account and campaign — creative, landing page, targeting.\n- Campaign goes live within a few business days.\n- Leads hit your WhatsApp/email the moment they come in, with regular reporting.\n\nWant to kick things off? Share a few details and we'll take it from there.",
+    ]),
   });
 
   return { entries, adsPricingResponse, chatbotPricingResponse: chatbotFaqs[7].a };
@@ -269,6 +311,7 @@ export function getFaqResponse(userMessage: string, history: FaqHistoryMessage[]
 
   for (const entry of ENTRIES) {
     if (entry.maxWords !== undefined && wordCount > entry.maxWords) continue;
+    if (entry.skipIfChatbotContext && hasChatbotContext(userMessage, history)) continue;
     if (entry.keywords.some((k) => containsKeyword(normalized, k))) {
       return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
     }
