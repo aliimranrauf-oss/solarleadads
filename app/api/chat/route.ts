@@ -61,7 +61,11 @@ function resolveProvider() {
 
 const MAX_HISTORY_MESSAGES = 10;
 const MAX_MESSAGE_LENGTH = 1000;
-const MAX_OUTPUT_TOKENS = 300;
+// 300 was clipping longer answers (e.g. pricing + a follow-up sentence)
+// mid-word, which reads as broken/amateur. 450 gives enough headroom for a
+// full multi-line answer while still keeping the widget's "text message,
+// not an essay" formatting rule from persona.ts in check.
+const MAX_OUTPUT_TOKENS = 450;
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per window
@@ -207,6 +211,8 @@ Answer questions about pricing, leads, regions covered, Meta ad access, the onbo
 
 Always respond to the visitor's most recent message specifically — read it carefully before answering. If it asks something different from your previous reply, address that new question directly instead of repeating your last answer. Never pad an answer with pricing info the visitor didn't ask about in their latest message.
 
+Sound like a real person on the team typing a quick reply, not a script being read aloud. Concretely: vary how you open each message (don't start every reply the same way — mix "No — ", "Yeah, so...", "Depends on...", a direct answer with no lead-in, etc. depending on what fits); briefly echo back a specific word or detail from what the visitor just said when it's natural to; and never reuse the exact sentence structure or phrasing you used earlier in this same conversation, even if the underlying fact is the same. Two visitors asking the same question, or the same visitor asking twice, should never get identical wording.
+
 ${PERSONA}
 
 Regions served BY THE META ADS SERVICE: ${regions.map((r) => r.label).join(", ")} (plus other countries on a case-by-case "Global" basis). The AI chatbot service has no regional restriction — it is sold to solar businesses anywhere in the world.
@@ -329,7 +335,11 @@ export async function POST(req: NextRequest) {
         model: provider.model,
         messages: providerMessages,
         max_tokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.4,
+        // 0.4 was producing stiff, same-shaped sentences turn after turn.
+        // 0.6 keeps facts (which come from the grounded data below, not the
+        // model's imagination) reliable while giving phrasing enough room
+        // to vary and sound like a person typing, not a template.
+        temperature: 0.6,
       }),
     });
 
