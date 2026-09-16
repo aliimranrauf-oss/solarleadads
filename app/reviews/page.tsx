@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import { getApprovedReviews } from "@/lib/get-reviews";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
 import ReviewForm from "@/components/ReviewForm";
+import {
+  jsonLdGraph,
+  breadcrumbSchema,
+  organizationSchema,
+  aggregateRatingFrom,
+  reviewsSchema,
+} from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Client Reviews",
@@ -16,9 +23,32 @@ export const revalidate = 60;
 
 export default async function ReviewsPage() {
   const reviews = await getApprovedReviews();
+  const aggregateRating = aggregateRatingFrom(reviews);
+
+  // Star ratings in search results come from here. Deliberately omitted
+  // when only placeholder reviews exist — marking up fake ratings is the
+  // fastest way to earn a Google manual action.
+  const jsonLd = jsonLdGraph([
+    {
+      ...organizationSchema,
+      ...(aggregateRating
+        ? { aggregateRating, review: reviewsSchema(reviews) }
+        : {}),
+    },
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Client Reviews", path: "/reviews" },
+    ]),
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="section-pad pt-10 sm:pt-14">
         <div className="container-max">
           <p className="eyebrow mb-5">Client reviews</p>
